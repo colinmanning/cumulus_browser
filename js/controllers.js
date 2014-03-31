@@ -6,7 +6,6 @@ app.controller('disUserController', function ($location, $scope, disservice) {
     $scope.cumulusUser = ($location.search()).cu;
     $scope.user = {};
     $scope.loggedIn = false;
-    disservice('http://dis.berlinirish.com');
 
     this.doValidateUser = function doValidateUser(password) {
         disservice.validateUser(this.connection, $scope.cumulusUser, password).success(function (response) {
@@ -32,18 +31,17 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
     $scope.currentPage = 1;
     $scope.maxSize = 5;
     $scope.showPager = false;
-    $scope.pageSize = 5;
-    disservice('http://dis.berlinirish.com');
+    $scope.pageSize = 10;
 
     this.doTextSearch = function doTextSearch() {
-        disservice.textSearch(this.connection, this.view, this.searchText, this.currentPage, this.pageSize).success(function (response) {
+        disservice.textSearch(this.connection, this.view, this.searchText, $scope.currentPage, $scope.pageSize).success(function (response) {
             $scope.assets = response;
             $scope.totalItems = $scope.assets.total;
             if ($scope.totalItems > $scope.pageSize)
                 $scope.showPager = true;
             else
                 $scope.showPager = false;
-            $scope.hasAssets = true;
+            $scope.hasAssets = ($scope.assets.total > 0);
         }).error(function (response) {
             this.doClear();
         });
