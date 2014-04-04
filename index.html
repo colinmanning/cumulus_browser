@@ -75,10 +75,18 @@
 
     <div class="row" style="margin-top:10px">
        <div class="col-md-12" style="margin-bottom: 20px">
+           <!--
             <div ng-controller="disAssetsController as asset_search">
                 <input type="text" ng-model="asset_search.searchText" dis-key-enter="asset_search.doTextSearch()"/>
-                <!-- <button class="btn" ng-click="asset_search.doTextSearch()">Search</button> -->
+
                 <dis-asset-list/>
+            </div>
+-->
+            <div ng-controller="disRecentAssetsController">
+                   <dis-recent-asset-list/>
+            </div>
+            <div ng-controller="disCategoryController">
+                <dis-category-panel/>
             </div>
             <div ng-controller="disFileUploadController as file_upload">
                 <dis-file-upload-panel/>

@@ -9,7 +9,9 @@
 
         <!-- 2. ng-file-select | ng-file-select="options" -->
         <input ng-file-select type="file" multiple/>
-        <dis-category-panel/>
+        <!--div ng-controller="disCategoryController">
+            <dis-category-panel/>
+        </div-->
     </div>
     <div class="col-md-9" style="margin-bottom: 10px">
         <p>Files waiting: {{ uploader.queue.length }}</p>

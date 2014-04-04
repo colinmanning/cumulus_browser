@@ -36,3 +36,12 @@ app.directive('disAssetList', function () {
     }
 )
 
+app.directive('disRecentAssetList', function () {
+
+        return {
+            restrict: 'E',
+            templateUrl: 'dis-recent-asset-list.html',
+            transclude: true
+        }
+    }
+)

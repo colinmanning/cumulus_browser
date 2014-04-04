@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="local_xampp" uploadOnCheckin="84bee9d9-dd49-4b7c-bf83-aae3b2c11478">
+  <component name="PublishConfigData" autoUpload="Always" serverName="local_xamp" uploadOnCheckin="84bee9d9-dd49-4b7c-bf83-aae3b2c11478">
     <serverData>
-      <paths name="local_xampp">
+      <paths name="local_xamp">
         <serverdata>
           <mappings>
             <mapping deploy="." local="$PROJECT_DIR$" web="/cumulus_browser" />

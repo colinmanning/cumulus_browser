@@ -1,3 +1,12 @@
-<div>
+<div ng-transclude style="margin-bottom: 10px">
+    <div ng-click="showCategories(superParentCategoryId)"><a>Level Up</a></div>
+    <div ng-click="showCategories(superParentCategoryId)">Uploading to {{currentCategoryName}}</div>
+    <table class="table-striped  table-condensed">
 
+        <tbody>
+        <tr ng-repeat="category in categories">
+            <td ng-click="showCategories({{category.id}})"><a>{{category.name}}</a></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
