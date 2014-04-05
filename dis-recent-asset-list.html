@@ -14,7 +14,7 @@
         </thead>
         <tbody>
         <tr ng-repeat="asset in assets.records">
-            <!--td ng-click="doPreview({{asset}})"><img src={{asset.preview_thumbnail}}/></td-->
+            <td ng-click="doPreview({{asset}})"><img src={{asset.preview_very_small}}/></td>
             <td>{{asset.ID}}</td>
             <td>{{asset.Record_Name}}</td>
             <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:MM:ss'}}</td>
