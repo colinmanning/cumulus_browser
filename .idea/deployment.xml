@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="local_xamp" uploadOnCheckin="84bee9d9-dd49-4b7c-bf83-aae3b2c11478">
+  <component name="PublishConfigData" autoUpload="Always" serverName="local_xamp">
     <serverData>
       <paths name="local_xamp">
         <serverdata>
@@ -10,7 +10,6 @@
         </serverdata>
       </paths>
     </serverData>
-    <option name="myUploadOnCheckinName" value="local_xampp" />
     <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>
