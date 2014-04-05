@@ -37,10 +37,7 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
         disservice.textSearch(this.connection, this.view, this.searchText, $scope.currentPage, $scope.pageSize).success(function (response) {
             $scope.assets = response;
             $scope.totalItems = $scope.assets.total;
-            if ($scope.totalItems > $scope.pageSize)
-                $scope.showPager = true;
-            else
-                $scope.showPager = false;
+            $scope.showPager = $scope.totalItems > $scope.pageSize;
             $scope.hasAssets = ($scope.assets.total > 0);
         }).error(function (response) {
             this.doClear();
@@ -49,7 +46,7 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
 
     $scope.doSelectPage = function doSelectPage(pageNo) {
 
-    }
+    };
 
     $scope.doPreview = function doPreview(asset) {
         $scope.currentAsset = asset;
@@ -75,13 +72,13 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
         this.searchText = '';
         $scope.assets = {};
         $scope.hasAssets = false;
-    }
+    };
 
     //this.doTextSearch();
 
 });
 
-app.controller('disRecentAssetsController', function ($scope, $modal, disservice, dataService) {
+app.controller('disRecentAssetsController', function ($scope, $modal, disservice) {
     $scope.assets = {};
     $scope.connection = 'sample-2';
     $scope.view = 'overview';
@@ -124,7 +121,7 @@ app.controller('disRecentAssetsController', function ($scope, $modal, disservice
         this.searchText = '';
         $scope.assets = {};
         $scope.hasAssets = false;
-    }
+    };
 
     if(!disservice.categoryId) {
         disservice.categoryId = 1;
@@ -165,15 +162,17 @@ app.controller('disCategoryController', function ($scope, disservice) {
     $scope.catTreeArray = [1];
     $scope.connection = 'sample-2';
     $scope.parentCategoryId = 1;
-    $scope.currentCategoryName = "Top Level";
-    this.superParentCategoryId = 1;
+    $scope.currentCategoryName = "";
+    this.superParentCategoryId = app.rootCategory.id;
     $scope.categoryId = 1;
     $scope.recursive = 'false';
 
-    $scope.doGetCategories = function doGetCategories(connection, categoryId, recursive) {
+    $scope.doGetCategories = function doGetCategories(connection, categoryId, recursive, isRoot) {
  //           $scope.categoryId = categoryId
-            disservice.getCategories(connection, categoryId, recursive).success(function (response) {
-                $scope.currentCategoryName = response.name;
+            disservice.getCategories(connection, categoryId, recursive, isRoot).success(function (response) {
+                if (!isRoot) {
+                    $scope.currentCategoryName = $scope.currentCategoryName + ":" + response.name;
+                }
                 $scope.categoryId = response.id;
                 $scope.hasSubcategories = (response.hasChildren == true);
                 if($scope.hasSubcategories) {
@@ -194,8 +193,8 @@ app.controller('disCategoryController', function ($scope, disservice) {
                             $scope.superParentCategoryId = $scope.parentCategoryId;
                         }
                         if (catIdIndex>1) {
-                            $scope.parentCategoryId = categoryId;//$scope.catTreeArray[catIdIndex-1];
-                            $scope.superParentCategoryId =  $scope.catTreeArray[catIdIndex-1];//$scope.catTreeArray[catIdIndex-2];
+                            $scope.parentCategoryId = categoryId; //$scope.catTreeArray[catIdIndex-1];
+                            $scope.superParentCategoryId =  $scope.catTreeArray[catIdIndex-1]; //$scope.catTreeArray[catIdIndex-2];
                         }
                     }
 
@@ -206,10 +205,16 @@ app.controller('disCategoryController', function ($scope, disservice) {
     };
 
     $scope.showCategories = function showCategories(categoryId) {
-        $scope.doGetCategories($scope.connection,categoryId, $scope.recursive);
-
+        $scope.doGetCategories($scope.connection, categoryId, $scope.recursive, false);
     }
-    $scope.doGetCategories($scope.connection, 1, $scope.recursive);
+
+    $scope.showRootCategory = function showRootCategory() {
+        $scope.currentCategoryName = app.rootCategory.path;
+        $scope.doGetCategories($scope.connection, app.rootCategory.id, $scope.recursive, true);
+        $scope.currentCategoryName = app.rootCategory.path;
+    }
+
+    $scope.showRootCategory();
 });
 
 app.controller('disFileUploadController', function ($scope, $fileUploader, disservice, dataService) {
