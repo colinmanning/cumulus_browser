@@ -54,42 +54,32 @@
 <body ng-app="disBrowser">
 
 <div class="container">
-    <div class="navbar navbar-default">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="https://printoutsource.com">Cumulus File Uploader</a>
+    <div class="row"
+         style="margin-top:10px;margin-bottom:10px">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div ng-controller="disCategoryController">
+                    <span>Selected Category: {{currentCategoryPath}}</span>
+                </div>
+            </div>
         </div>
-    </div>
-    <div ng-controller="disUserController as user" style="padding-bottom: 10px;border-bottom-style: solid;border-bottom-width: 1px;border-bottom-color: #aaaaaa">
-        <form class="form-inline" role="form">
-            <div class="form-group">
-                <label class="sr-only" for="exampleInputEmail2">Enter email</label>
-                <input type="email" class="form-control" id="exampleInputEmail2" ng-model="user.cumulusUser">
-            </div>
-            <div class="form-group">
-                <label class="sr-only" for="exampleInputPassword2">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password">
-            </div>
-            <button type="submit" class="btn btn-default">Sign in</button>
-        </form>
-    </div>
+        <div class="row"
+             style="margin-top:10px;margin-bottom:10px">
+            <div class="col-md-3" style="margin-bottom: 20px">
 
-    <div class="row" style="margin-top:10px">
-       <div class="col-md-12" style="margin-bottom: 20px">
-           <!--
-            <div ng-controller="disAssetsController as asset_search">
-                <input type="text" ng-model="asset_search.searchText" dis-key-enter="asset_search.doTextSearch()"/>
-
-                <dis-asset-list/>
+                <div ng-controller="disCategoryController">
+                    <dis-category-panel/>
+                </div>
             </div>
--->
-            <div ng-controller="disRecentAssetsController">
-                   <dis-recent-asset-list/>
+            <div class="col-md-5" style="margin-bottom: 20px">
+                <div ng-controller="disFileUploadController as file_upload">
+                    <dis-file-upload-panel/>
+                </div>
             </div>
-            <div ng-controller="disCategoryController">
-                <dis-category-panel/>
-            </div>
-            <div ng-controller="disFileUploadController as file_upload">
-                <dis-file-upload-panel/>
+            <div class="col-md-4" style="margin-bottom: 20px">
+                <div ng-controller="disRecentAssetsController">
+                    <dis-recent-asset-list/>
+                </div>
             </div>
         </div>
     </div>

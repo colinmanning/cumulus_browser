@@ -1,12 +1,21 @@
 <div ng-transclude style="margin-bottom: 10px">
-    <div ng-click="showCategories(superParentCategoryId)"><a>Level Up</a></div>
-    <div ng-click="showCategories(superParentCategoryId)">Uploading to {{currentCategoryName}}</div>
-    <table class="table-striped  table-condensed">
-
-        <tbody>
-        <tr ng-repeat="category in categories">
-            <td ng-click="showCategories({{category.id}})"><a>{{category.name}}</a></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Categories</h3></div>
+        <div class="panel-body">
+            <div style="margin-bottom: 6px">
+                <button class="btn btn-primary" ng-click="showRootCategory()"><span
+                        class="glyphicon glyphicon-home"></span>
+                </button>
+                <button class="btn btn-primary" ng-click="showCategories(superParentCategoryId)"><span
+                        class="glyphicon glyphicon-arrow-up"></span></button>
+            </div>
+            <table class="table-striped  table-condensed">
+                <tbody>
+                <tr ng-repeat="category in categories">
+                    <td ng-click="showCategories({{category.id}})"><a>{{category.name}}</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

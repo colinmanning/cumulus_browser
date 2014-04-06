@@ -1,24 +1,27 @@
-<div ng-transclude style="margin-bottom: 10px">
-    <pagination boundary-links="true" total-items="totalItems" page="currentPage" class="pagination-sm"
-                previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
-                items-per-page="pageSize" ng-show="$parent.showPager"
-                on-select-page="selectPage"></pagination>
-    <table class="table-striped  table-condensed">
-        <thead>
-        <tr>
-            <th width="110">Preview</th>
-            <th width="60">Id</th>
-            <th width="200">Name</th>
-            <th width="200">Last Modified</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="asset in assets.records">
-            <td ng-click="doPreview({{asset}})"><img src={{asset.preview_very_small}}/></td>
-            <td>{{asset.ID}}</td>
-            <td>{{asset.Record_Name}}</td>
-            <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:MM:ss'}}</td>
-        </tr>
-        </tbody>
-    </table>
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Recent Files</h3></div>
+    <div class="panel-body">
+        <div ng-transclude style="margin-bottom: 10px">
+            <pagination boundary-links="true" total-items="totalItems" page="currentPage" class="pagination-sm"
+                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
+                        items-per-page="pageSize" ng-show="$parent.showPager"
+                        on-select-page="selectPage"></pagination>
+            <table class="table-striped  table-condensed">
+                <thead>
+                <tr>
+                    <th width="110">Preview</th>
+                    <th width="200">Name</th>
+                    <th width="200">Last Modified</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="asset in assets.records">
+                    <td ng-click="doPreview({{asset}})"><img src="{{asset.preview_very_small}}&force"/></td>
+                    <td>{{asset.Record_Name}}</td>
+                    <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:MM:ss'}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

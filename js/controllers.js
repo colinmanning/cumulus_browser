@@ -124,7 +124,7 @@ app.controller('disRecentAssetsController', function ($scope, $modal, disservice
     };
 
     if(!disservice.categoryId) {
-        disservice.categoryId = 1;
+        disservice.categoryId = app.rootCategory.id;
     }
 
     $scope.$on ("myEvent", function (event, args) {
@@ -162,7 +162,7 @@ app.controller('disCategoryController', function ($scope, disservice) {
     $scope.catTreeArray = [1];
     $scope.connection = 'sample-2';
     $scope.parentCategoryId = 1;
-    $scope.currentCategoryName = "";
+    $scope.currentCategoryPath = "";
     this.superParentCategoryId = app.rootCategory.id;
     $scope.categoryId = 1;
     $scope.recursive = 'false';
@@ -171,7 +171,7 @@ app.controller('disCategoryController', function ($scope, disservice) {
  //           $scope.categoryId = categoryId
             disservice.getCategories(connection, categoryId, recursive, isRoot).success(function (response) {
                 if (!isRoot) {
-                    $scope.currentCategoryName = $scope.currentCategoryName + ":" + response.name;
+                    $scope.currentCategoryPath = $scope.currentCategoryPath + ":" + response.name;
                 }
                 $scope.categoryId = response.id;
                 $scope.hasSubcategories = (response.hasChildren == true);
@@ -209,9 +209,9 @@ app.controller('disCategoryController', function ($scope, disservice) {
     }
 
     $scope.showRootCategory = function showRootCategory() {
-        $scope.currentCategoryName = app.rootCategory.path;
+        $scope.currentCategoryPath = app.rootCategory.path;
         $scope.doGetCategories($scope.connection, app.rootCategory.id, $scope.recursive, true);
-        $scope.currentCategoryName = app.rootCategory.path;
+        $scope.currentCategoryPath = app.rootCategory.path;
     }
 
     $scope.showRootCategory();
