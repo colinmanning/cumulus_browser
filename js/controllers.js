@@ -155,7 +155,7 @@ app.controller('disAssetController', function ($scope, disservice) {
     }
 );
 
-app.controller('disCategoryController', function ($scope, disservice) {
+app.controller('disCategoryController', function ($scope, disservice, dataService) {
     $scope.category = {};
     $scope.recursive = false;
 
@@ -198,6 +198,7 @@ app.controller('disCategoryController', function ($scope, disservice) {
                         }
                     }
                     $scope.categories = response.subcategories;
+                    dataService.broadcastData({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
             }
         });
     };
