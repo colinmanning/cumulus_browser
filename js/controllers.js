@@ -197,10 +197,8 @@ app.controller('disCategoryController', function ($scope, disservice) {
                             $scope.superParentCategoryId =  $scope.catTreeArray[catIdIndex-1]; //$scope.catTreeArray[catIdIndex-2];
                         }
                     }
-
                     $scope.categories = response.subcategories;
             }
-
         });
     };
 
