@@ -21,7 +21,7 @@
         </div>
         <div class="row">
             <div class="col-md-12" style="margin-bottom: 10px">
-                <p>Files waiting: {{ uploader.queue.length }}</p>
+                <p style="padding-top: 4px">Queue size: {{ uploader.queue.length }}</p>
                 <table class="table-striped table-condensed">
                     <thead>
                     <tr>
@@ -59,14 +59,14 @@
                         <td nowrap>
                             <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()"
                                     ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                                <span class="glyphicon glyphicon-upload"></span> Upload
+                                <span class="glyphicon glyphicon-upload"></span>
                             </button>
                             <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()"
                                     ng-disabled="!item.isUploading">
-                                <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                <span class="glyphicon glyphicon-ban-circle"></span>
                             </button>
                             <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                                <span class="glyphicon glyphicon-trash"></span> Remove
+                                <span class="glyphicon glyphicon-trash"></span>
                             </button>
                         </td>
                     </tr>
