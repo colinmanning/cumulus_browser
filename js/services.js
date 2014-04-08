@@ -40,7 +40,19 @@ app.factory('disservice', function ($http) {
     }
 
     disAPI.validateUser = function (connection, u, p) {
-        return false;
+        //mock testing function
+        if (p == 'cumulus') {
+            return $http({
+                method: 'get',
+                url: app.baseUrl
+            });
+        } else {
+            return $http({
+                method: 'JSONP',
+                url: app.baseUrl
+            });
+        }
+
     };
 
 
@@ -57,3 +69,28 @@ app.factory('dataService', function ($rootScope) {
 
     return shared;
 });
+
+app.factory('alertService', function ($rootScope) {
+
+    var alertService = {};
+    $rootScope.alerts = [];
+
+    alertService.add = function (type, msg) {
+        $rootScope.alerts.push({type:type, msg:msg});
+    };
+
+    alertService.closeAlert = function (index) {
+        $rootScope.alerts.splice (index,1);
+    };
+
+    alertService.clear = function() {
+        $rootScope.alerts = [];
+    }
+
+    return alertService;
+
+
+    return shared;
+});
+
+

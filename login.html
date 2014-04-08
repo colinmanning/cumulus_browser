@@ -9,6 +9,7 @@
 
     <script src="lib/bootstrap.min.js"></script>
     <script src="lib/angular.min.js"></script>
+    <script src="lib/angular-cookies.min.js"></script>
     <script src="lib/ui-bootstrap-tpls-0.10.0.js"></script>
 
     <script src="lib/angular-file-upload.js"></script>
@@ -50,7 +51,7 @@
 
 </head>
 
-<!-- 1. ng-file-drop | ng-file-drop="options" -->
+<!-- 1. ng-file-drop | ng-filex-drop="options" -->
 <body ng-app="disBrowser">
 
 <div class="container">
@@ -59,8 +60,12 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div ng-controller="disUserController">
-                    Username: {{cumulusUser}},
-                    Password: <input name="cumulusPassword" value="{{cumulusPassword}}"}/>
+                    Username: <input name="cumulusUser" ng-model="cumulusUser" value="{{cumulusUser}}"/>
+                    Password: <input name="cumulusPassword" ng-model="cumulusPassword" value="{{cumulusPassword}}"/>
+                    <button ng-click="doValidateUser(cumulusPassword)" >Login</button>
+                </div>
+                <div  ng-controller="AlertController">
+                    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
                 </div>
             </div>
         </div>

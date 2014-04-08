@@ -2,22 +2,55 @@
 
 var app = angular.module('disBrowser');
 
-app.controller('disUserController', function ($location, $scope, disservice) {
+app.controller('disUserController', function ($location, $scope, disservice, alertService, $cookies) {
     $scope.cumulusUser = ($location.search()).cu;
     $scope.user = {};
-    $scope.loggedIn = false;
+    //$scope.loggedIn = false;
 
-    this.doValidateUser = function doValidateUser(password) {
+
+    $scope.doValidateUser = function doValidateUser(password) {
         disservice.validateUser(this.connection, $scope.cumulusUser, password).success(function (response) {
             $scope.loggedIn = true;
             $scope.user = response;
-            $scope.hasAssets = ($scope.assets.total > 0);
-            $scope.hasAssets = true;
+            console.info("login successful");
+            alertService.clear ();
+            alertService.add ('success', 'Successfully logged in');
+            $cookies.setantaMediaApprover = "true";
+            window.location = "index.html";
         }).error(function (response) {
             $scope.user = {};
             $scope.loggedIn = false;
+            console.info("login failed");
+            $cookies.setantaMediaApprover = "";
+            alertService.clear ();
+            alertService.add ('danger','Invalid username or password');
         });
     }
+});
+
+app.controller('authControler', function ($scope, $cookies) {
+
+    if(!$cookies.setantaMediaApprover)
+    {
+        window.location = "login.html?cu="+$scope.cumulusUser;
+    }
+
+});
+
+
+app.controller('alertControler', function ($scope, alertService) {
+    $scope.alerts = [
+        {type:'danger', msg:'Invalid username or password'},
+        {type:'success', msg:'Successfully logged in'}
+    ];
+
+    $scope.addAlert = function() {
+        $scope.alerts.push({msg: "Another alert!"});
+    };
+
+    $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+    };
 });
 
 app.controller('disAssetsController', function ($scope, $modal, disservice) {
