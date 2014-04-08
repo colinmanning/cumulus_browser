@@ -1,7 +1,12 @@
 <div class="panel panel-default">
-    <div class="panel-heading"><h3 class="panel-title">Recent Files</h3></div>
+    <div class="panel-heading"><h3 class="panel-title">Recent Uploaded Files</h3></div>
     <div class="panel-body">
-        <div ng-transclude style="margin-bottom: 10px">
+        <div style="margin-bottom: 10px">
+            <div style="margin-bottom: 6px">
+                <button class="btn btn-primary" ng-click="doFetch()" ng-show="false"><span
+                        class="glyphicon glyphicon-refresh"></span>
+                </button>
+            </div>
             <pagination boundary-links="true" total-items="totalItems" page="currentPage" class="pagination-sm"
                         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
                         items-per-page="pageSize" ng-show="$parent.showPager"
@@ -16,7 +21,7 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="asset in assets.records">
-                    <td ng-click="doPreview({{asset}})"><img src="{{asset.preview_very_small}}&force"/></td>
+                    <td ng-click="doPreview(asset)"><img src="{{asset.preview_very_small}}&force"/></td>
                     <td>{{asset.Record_Name}}</td>
                     <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:MM:ss'}}</td>
                 </tr>

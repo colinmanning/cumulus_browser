@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"> <!-- id="ng-app" IE<8 -->
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Cumulus Uploader</title>
     <script src="lib/es5-shim-min.js"></script>
@@ -58,28 +59,25 @@
          style="margin-top:10px;margin-bottom:10px">
         <div class="panel panel-default">
             <div class="panel-body">
-                <div ng-controller="disUserController" ng-show="false">
-                    <span>Hello: {{cumulusUser}}</span>
-                </div>
                 <div ng-controller="disCategoryController">
-                    <span>Selected Category: {{currentCategoryPath}}</span>
+                    <span>Your Category: {{currentCategoryPath}}</span>
                 </div>
             </div>
         </div>
         <div class="row"
              style="margin-top:10px;margin-bottom:10px">
-            <div class="col-md-3" style="margin-bottom: 20px">
+            <div class="col-sm-3" style="margin-bottom: 20px">
 
                 <div ng-controller="disCategoryController">
                     <dis-category-panel/>
                 </div>
             </div>
-            <div class="col-md-5" style="margin-bottom: 20px">
+            <div class="col-sm-5" style="margin-bottom: 20px">
                 <div ng-controller="disFileUploadController as file_upload">
                     <dis-file-upload-panel/>
                 </div>
             </div>
-            <div class="col-md-4" style="margin-bottom: 20px">
+            <div class="col-sm-4" style="margin-bottom: 20px">
                 <div ng-controller="disRecentAssetsController">
                     <dis-recent-asset-list/>
                 </div>

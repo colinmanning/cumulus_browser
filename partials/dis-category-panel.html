@@ -1,7 +1,7 @@
-<div ng-transclude style="margin-bottom: 10px">
-    <div class="panel panel-default">
-        <div class="panel-heading"><h3 class="panel-title">Categories</h3></div>
-        <div class="panel-body">
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Categories</h3></div>
+    <div class="panel-body">
+        <div style="margin-bottom: 10px">
             <div style="margin-bottom: 6px">
                 <button class="btn btn-primary" ng-click="showRootCategory()"><span
                         class="glyphicon glyphicon-home"></span>
@@ -9,10 +9,10 @@
                 <button class="btn btn-primary" ng-click="showCategories(superParentCategoryId)"><span
                         class="glyphicon glyphicon-arrow-up"></span></button>
             </div>
-            <table class="table-striped  table-condensed">
+            <table class="table-striped  table-condensed" style="width:100%">
                 <tbody>
                 <tr ng-repeat="category in categories">
-                    <td ng-click="showCategories({{category.id}})"><a>{{category.name}}</a></td>
+                    <td ng-click="showCategories(category.id)"><a>{{category.name}}</a></td>
                 </tr>
                 </tbody>
             </table>

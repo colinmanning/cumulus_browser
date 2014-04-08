@@ -28,21 +28,20 @@ app.factory('disservice', function ($http) {
     disAPI.assignItemToCategory = function (connection, itemId, categoryId) {
         return $http({
             method: 'JSONP',
-            url: app.baseUrl + '/data/' +connection + '/addrecordtocategory?callback=JSON_CALLBACK&recordid=' + itemId + '&categoryid='+categoryId
+            url: app.baseUrl + '/data/' + connection + '/addrecordtocategory?callback=JSON_CALLBACK&recordid=' + itemId + '&categoryid=' + categoryId
         });
     }
 
-    disAPI.getRecentAssetsInCategory = function (connection, view, categoryId, recursive, direction) {
+    disAPI.getRecentAssetsInCategory = function (connection, view, categoryId, recursive, direction, offset, count) {
         return $http({
             method: 'JSONP',
-            url: app.baseUrl + '/search/' + connection + '/categoryquery?callback=JSON_CALLBACK&id=' + categoryId + '&recursive=' + recursive + '&view=' + view + '&offset=0&count=5&sort=Asset Creation Date&direction='+direction
+            url: app.baseUrl + '/search/' + connection + '/categoryquery?callback=JSON_CALLBACK&id=' + categoryId + '&recursive=' + recursive + '&view=' + view + '&offset=' + offset + '&count=' + count + '&sort=Asset Creation Date&direction=' + direction
         });
     }
 
     disAPI.validateUser = function (connection, u, p) {
         return false;
     };
-
 
 
     return disAPI;
@@ -52,7 +51,7 @@ app.factory('dataService', function ($rootScope) {
 
     var shared = {};
     shared.broadcastData = function (data) {
-        $rootScope.$broadcast("myEvent", data);
+        $rootScope.$broadcast("refreshRecentFiles", data);
     }
 
     return shared;

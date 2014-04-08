@@ -51,7 +51,7 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
     $scope.doPreview = function doPreview(asset) {
         $scope.currentAsset = asset;
         var modalInstance = $modal.open({
-            templateUrl: 'dis-asset-preview.html',
+            templateUrl: 'partials/dis-asset-preview.html',
             controller: ModalInstanceCtrl,
             resolve: {
                 items: function () {
@@ -68,7 +68,7 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
 
     };
 
-    this.doClear = function doClear() {
+    var doClear = function doClear() {
         this.searchText = '';
         $scope.assets = {};
         $scope.hasAssets = false;
@@ -78,29 +78,50 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
 
 });
 
-app.controller('disRecentAssetsController', function ($scope, $modal, disservice) {
+app.controller('disRecentAssetsController', function ($scope, $modal, $interval, disservice) {
     $scope.assets = {};
     $scope.connection = app.disConnection;
     $scope.view = app.disView;
     $scope.hasAssets = false;
     $scope.currentAsset = {}
-    $scope.totalItems = 64;
+    $scope.totalItems = 0;
+    $scope.timedFetchAtcive = (app.recentFileFetchInterval >= 10);
+    $scope.currentSearchDetails = {};
+    this.timedRefresh;
 
 
     $scope.getRecentAssetsInCategory = function getRecentAssetsInCategory(categoryId, recursive, direction) {
-        disservice.getRecentAssetsInCategory($scope.connection, $scope.view, categoryId, recursive, direction).success(function (response) {
+        $scope.currentSearchDetails.categoryId = categoryId;
+        $scope.currentSearchDetails.recursive = recursive;
+        $scope.currentSearchDetails.direction = direction;
+        disservice.getRecentAssetsInCategory($scope.connection, $scope.view, categoryId, recursive, direction, 0, app.recentFileFetchCount).success(function (response) {
             $scope.assets = response;
             $scope.totalItems = $scope.assets.total;
             $scope.hasAssets = ($scope.assets.total > 0);
         }).error(function (response) {
-            this.doClear();
+            doClear();
         });
+    };
+
+    $scope.refreshRecentAssetsInCategory = function refreshRecentAssetsInCategory() {
+        disservice.getRecentAssetsInCategory($scope.connection, $scope.view, $scope.currentSearchDetails.categoryId, $scope.currentSearchDetails.recursive, $scope.currentSearchDetails.direction, 0, app.recentFileFetchCount).success(function (response) {
+            $scope.assets = response;
+            $scope.totalItems = $scope.assets.total;
+            $scope.hasAssets = ($scope.assets.total > 0);
+        }).error(function (response) {
+            doClear();
+        });
+    };
+
+    var doClear = function doClear() {
+        $scope.assets = {};
+        $scope.hasAssets = false;
     };
 
     $scope.doPreview = function doPreview(asset) {
         $scope.currentAsset = asset;
         var modalInstance = $modal.open({
-            templateUrl: 'dis-asset-preview.html',
+            templateUrl: 'partials/dis-asset-preview.html',
             controller: ModalInstanceCtrl,
             resolve: {
                 items: function () {
@@ -116,6 +137,18 @@ app.controller('disRecentAssetsController', function ($scope, $modal, disservice
         });
 
     };
+
+    $scope.$on('$destroy', function () {
+        // Make sure that the interval is destroyed too
+        if ($scope.timedFetchAtcive) {
+            $interval.cancel(timedRefresh);
+
+        }
+    });
+
+    $scope.doFetch = function doFetch() {
+        $scope.refreshRecentAssetsInCategory();
+    }
 
     this.doClear = function doClear() {
         this.searchText = '';
@@ -127,11 +160,15 @@ app.controller('disRecentAssetsController', function ($scope, $modal, disservice
         disservice.categoryId = app.rootCategory.id;
     }
 
-    $scope.$on ("myEvent", function (event, args) {
+    $scope.$on("refreshRecentFiles", function (event, args) {
         $scope.getRecentAssetsInCategory(args.categoryId, args.recursive, args.direction);
     });
 
     $scope.getRecentAssetsInCategory(disservice.categoryId, true, "descending");
+
+    if ($scope.timedFetchAtcive) {
+        this.timedRefresh = $interval($scope.refreshRecentAssetsInCategory, app.recentFileFetchInterval * 1000);
+    }
 
 });
 
@@ -159,12 +196,12 @@ app.controller('disCategoryController', function ($scope, disservice, dataServic
     $scope.category = {};
     $scope.recursive = false;
 
-    $scope.catTreeArray = [1];
+    $scope.catTreeArray = [];
     $scope.connection = app.disConnection;
-    $scope.parentCategoryId = 1;
+    $scope.parentCategoryId = app.rootCategory.id;
     $scope.currentCategoryPath = "";
-    this.superParentCategoryId = app.rootCategory.id;
-    $scope.categoryId = 1;
+    $scope.superParentCategoryId = app.rootCategory.id;
+    $scope.categoryId = app.rootCategory.id;
     $scope.recursive = 'false';
 
     $scope.doGetCategories = function doGetCategories(connection, categoryId, recursive, isRoot) {
@@ -198,8 +235,8 @@ app.controller('disCategoryController', function ($scope, disservice, dataServic
                         }
                     }
                     $scope.categories = response.subcategories;
-                    dataService.broadcastData({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
             }
+                dataService.broadcastData({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
         });
     };
 
@@ -220,9 +257,9 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
     // Creates a uploader
     var uploader = $scope.uploader = $fileUploader.create({
         scope: $scope,
-        url: 'http://dis.berlinirish.com/file/sample-1/upload',
+        url: app.baseUrl + '/file/' + app.disConnection + '/upload',
         formData: [
-            { "fulcrum_Caption": 'Colin testing stuff' }
+            { "fulcrum_Caption": '' }
         ]
     });
 
@@ -256,7 +293,7 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
     });
 
     uploader.bind('progress', function (event, item, progress) {
-        console.info('Progress: ' + progress, item);
+        //console.info('Progress: ' + progress, item);
     });
 
     uploader.bind('success', function (event, xhr, item, response) {
@@ -277,7 +314,7 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
     });
 
     uploader.bind('progressall', function (event, progress) {
-        console.info('Total progress: ' + progress);
+        //console.info('Total progress: ' + progress);
     });
 
     uploader.bind('completeall', function (event, items) {

@@ -10,7 +10,7 @@ app.directive('disSearch', function () {
 app.directive('disCategoryPanel', function () {
         return {
             restrict: 'E',
-            templateUrl: 'dis-category-panel.html',
+            templateUrl: 'partials/dis-category-panel.html',
             transclude: true
         }
     }
@@ -20,7 +20,7 @@ app.directive('disFileUploadPanel', function () {
 
         return {
             restrict: 'E',
-            templateUrl: 'dis-file-upload-panel.html',
+            templateUrl: 'partials/dis-file-upload-panel.html',
             transclude: true
         }
     }
@@ -30,7 +30,7 @@ app.directive('disAssetList', function () {
 
         return {
             restrict: 'E',
-            templateUrl: 'dis-asset-list.html',
+            templateUrl: 'partials/dis-asset-list.html',
             transclude: true
         }
     }
@@ -40,7 +40,7 @@ app.directive('disRecentAssetList', function () {
 
         return {
             restrict: 'E',
-            templateUrl: 'dis-recent-asset-list.html',
+            templateUrl: 'partials/dis-recent-asset-list.html',
             transclude: true
         }
     }
