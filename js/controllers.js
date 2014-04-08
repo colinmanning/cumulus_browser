@@ -55,8 +55,8 @@ app.controller('alertControler', function ($scope, alertService) {
 
 app.controller('disAssetsController', function ($scope, $modal, disservice) {
     $scope.assets = {};
-    this.connection = 'sample-2';
-    this.view = 'overview';
+    this.connection = app.disConnection;
+    this.view = app.disView;
     this.searchText = '';
     $scope.hasAssets = false;
     $scope.currentAsset = {}
@@ -113,8 +113,8 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
 
 app.controller('disRecentAssetsController', function ($scope, $modal, disservice) {
     $scope.assets = {};
-    $scope.connection = 'sample-2';
-    $scope.view = 'overview';
+    $scope.connection = app.disConnection;
+    $scope.view = app.disView;
     $scope.hasAssets = false;
     $scope.currentAsset = {}
     $scope.totalItems = 64;
@@ -193,7 +193,7 @@ app.controller('disCategoryController', function ($scope, disservice, dataServic
     $scope.recursive = false;
 
     $scope.catTreeArray = [1];
-    $scope.connection = 'sample-2';
+    $scope.connection = app.disConnection;
     $scope.parentCategoryId = 1;
     $scope.currentCategoryPath = "";
     this.superParentCategoryId = app.rootCategory.id;
@@ -263,11 +263,11 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
     // ADDING FILTERS
 
     // Images only
-    uploader.filters.push(function (item /*{File|HTMLInputElement}*/) {
-        var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
-        type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
-        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-    });
+    //uploader.filters.push(function (item /*{File|HTMLInputElement}*/) {
+    //    var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
+    //    type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
+    //    return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+    //});
 
 
     // REGISTER HANDLERS
@@ -294,7 +294,6 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
 
     uploader.bind('success', function (event, xhr, item, response) {
         disservice.assignItemToCategory(disservice.connection, response.id, disservice.categoryId);
-
         console.info('Success', xhr, item, response);
     });
 
