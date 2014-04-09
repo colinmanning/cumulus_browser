@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- id="ng-app" IE<8 -->
+<html>
+<head lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Cumulus Uploader</title>
     <script src="lib/es5-shim-min.js"></script>
-    <script src="lib/jquery-1.8.3.min.js"></script>
+    <script src="lib/jquery-1.11.0.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
 
     <script src="lib/bootstrap.min.js"></script>
     <script src="lib/angular.min.js"></script>
     <script src="lib/angular-cookies.min.js"></script>
+    <script src="lib/angular-route.min.js"></script>
     <script src="lib/ui-bootstrap-tpls-0.10.0.js"></script>
 
     <script src="lib/angular-file-upload.js"></script>
@@ -48,40 +50,10 @@
             margin: 6px 0 0 6px;
         }
     </style>
-
 </head>
-
-<!-- 1. ng-file-drop | ng-file-drop="options" -->
 <body ng-app="disBrowser">
-<div ng-controller="authControler">
 
-</div>
-<div class="container">
-    <div class="row"
-         style="margin-top:10px;margin-bottom:10px">
-        <div ng-controller="disCategoryBreadcrumbsController">
-            <dis-category-breadcrumbs/>
-        </div>
-        <div class="row"
-             style="margin-top:10px;margin-bottom:10px">
-            <div class="col-md-3" style="margin-bottom: 20px">
+<div ng-view></div>
 
-                <div ng-controller="disCategoryController">
-                    <dis-category-panel/>
-                </div>
-            </div>
-            <div class="col-md-5" style="margin-bottom: 20px">
-                <div ng-controller="disFileUploadController as file_upload">
-                    <dis-file-upload-panel/>
-                </div>
-            </div>
-            <div class="col-md-4" style="margin-bottom: 20px">
-                <div ng-controller="disRecentAssetsController">
-                    <dis-recent-asset-list/>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>

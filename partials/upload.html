@@ -1,0 +1,28 @@
+<div ng-controller="authController"/>
+<div class="container">
+    <div class="row"
+         style="margin-top:10px;margin-bottom:10px">
+        <div ng-controller="disCategoryBreadcrumbsController">
+            <dis-category-breadcrumbs/>
+        </div>
+        <div class="row"
+             style="margin-top:10px;margin-bottom:10px">
+            <div class="col-md-3" style="margin-bottom: 20px">
+
+                <div ng-controller="disCategoryController">
+                    <dis-category-panel/>
+                </div>
+            </div>
+            <div class="col-md-5" style="margin-bottom: 20px">
+                <div ng-controller="disFileUploadController as file_upload">
+                    <dis-file-upload-panel/>
+                </div>
+            </div>
+            <div class="col-md-4" style="margin-bottom: 20px">
+                <div ng-controller="disRecentAssetsController">
+                    <dis-recent-asset-list/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

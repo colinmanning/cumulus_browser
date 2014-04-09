@@ -1,56 +1,52 @@
 'use strict';
 
-var app = angular.module('disBrowser');
+var uploaderControllers = angular.module('uploaderControllers', []);
 
-app.controller('disUserController', function ($location, $scope, disservice, alertService, $cookies) {
-    $scope.cumulusUser = ($location.search()).cu;
+uploaderControllers.controller('disUserController', function ($location, $scope, disservice, alertService, $cookies, $routeParams) {
+    $scope.cumulusUser = $routeParams.cu;
     $scope.user = {};
+    $scope.failedLogins = 0;
     //$scope.loggedIn = false;
 
 
     $scope.doValidateUser = function doValidateUser(password) {
+
         disservice.validateUser(this.connection, $scope.cumulusUser, password).success(function (response) {
+            $scope.failedLogins = 0;
             $scope.loggedIn = true;
             $scope.user = response;
             console.info("login successful");
-            alertService.clear ();
-            alertService.add ('success', 'Successfully logged in');
+            alertService.clear();
+            //alertService.add ('success', 'Successfully logged in');
             $cookies.setantaMediaApprover = "true";
-            window.location = "index.html";
+            window.location = "#/upload";
         }).error(function (response) {
+            $scope.failedLogins += 1;
             $scope.user = {};
             $scope.loggedIn = false;
             console.info("login failed");
             $cookies.setantaMediaApprover = "";
-            alertService.clear ();
-            alertService.add ('danger','Invalid username or password');
+            alertService.clear();
+            alertService.add('danger', 'Failed login attempts: ' + $scope.failedLogins);
         });
     }
 });
 
-app.controller('authControler', function ($scope, $cookies) {
+app.controller('authController', function ($scope, $cookies) {
 
-    if(!$cookies.setantaMediaApprover)
-    {
+    if (!$cookies.setantaMediaApprover) {
         window.location = "login.html?cu="+$scope.cumulusUser;
     }
 
 });
 
 
-app.controller('alertControler', function ($scope, alertService) {
-    $scope.alerts = [
-        {type:'danger', msg:'Invalid username or password'},
-        {type:'success', msg:'Successfully logged in'}
-    ];
-
-    $scope.addAlert = function() {
-        $scope.alerts.push({msg: "Another alert!"});
+app.controller('alertController', function ($scope, alertService) {
+    $scope.closeAlert = function (index) {
+        alertService.closeAlert(index);
+        ;
     };
 
-    $scope.closeAlert = function(index) {
-        $scope.alerts.splice(index, 1);
-    };
 });
 
 app.controller('disAssetsController', function ($scope, $modal, disservice) {

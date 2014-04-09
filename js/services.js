@@ -41,7 +41,7 @@ app.factory('disservice', function ($http) {
 
     disAPI.validateUser = function (connection, u, p) {
         //mock testing function
-        if (p == 'demo') {
+        if (u = 'demo53' && p == 'demo13') {
             return $http({
                 method: 'get',
                 url: app.baseUrl
@@ -92,8 +92,6 @@ app.factory('alertService', function ($rootScope) {
 
     return alertService;
 
-
-    return shared;
 });
 
 
