@@ -50,8 +50,12 @@ app.factory('disservice', function ($http) {
 app.factory('dataService', function ($rootScope) {
 
     var shared = {};
-    shared.broadcastData = function (data) {
+    shared.refreshRecentFilesEvent = function (data) {
         $rootScope.$broadcast("refreshRecentFiles", data);
+    }
+
+    shared.updateCurrentCategoryEvent = function (data) {
+        $rootScope.$broadcast("updateCurrentCategory", data);
     }
 
     return shared;

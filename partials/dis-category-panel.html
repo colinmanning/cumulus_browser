@@ -2,17 +2,17 @@
     <div class="panel-heading"><h3 class="panel-title">Categories</h3></div>
     <div class="panel-body">
         <div style="margin-bottom: 10px">
-            <div style="margin-bottom: 6px">
+            <div style="margin-bottom: 6px" ng-show="!isRoot">
                 <button class="btn btn-primary" ng-click="showRootCategory()"><span
-                        class="glyphicon glyphicon-home"></span>
+                        class="glyphicon glyphicon-home" tooltip="Go to root category"></span>
                 </button>
-                <button class="btn btn-primary" ng-click="showCategories(superParentCategoryId)"><span
-                        class="glyphicon glyphicon-arrow-up"></span></button>
+                <button class="btn btn-primary" ng-click="showParentCategory()"><span
+                        class="glyphicon glyphicon-arrow-up" tooltip="Go to parent category"></span></button>
             </div>
             <table class="table-striped  table-condensed" style="width:100%">
                 <tbody>
                 <tr ng-repeat="category in categories">
-                    <td ng-click="showCategories(category.id)"><a>{{category.name}}</a></td>
+                    <td ng-click="showCategories(category)"><a>{{category.name}}</a></td>
                 </tr>
                 </tbody>
             </table>

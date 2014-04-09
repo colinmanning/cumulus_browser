@@ -16,6 +16,15 @@ app.directive('disCategoryPanel', function () {
     }
 )
 
+app.directive('disCategoryBreadcrumbs', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'partials/dis-category-breadcrumbs.html',
+            transclude: true
+        }
+    }
+)
+
 app.directive('disFileUploadPanel', function () {
 
         return {
