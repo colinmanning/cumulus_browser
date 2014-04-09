@@ -3,8 +3,8 @@
     <div class="panel-body">
         <div style="margin-bottom: 10px">
             <div style="margin-bottom: 6px">
-                <button class="btn btn-primary" ng-click="doFetch()" ng-show="false"><span
-                        class="glyphicon glyphicon-refresh"></span>
+                <button class="btn btn-primary" ng-click="doFetch()" ng-show="showRefreshButton"><span
+                        class="glyphicon glyphicon-refresh" tooltip="Refresh recent uploaded files list"></span>
                 </button>
             </div>
             <pagination boundary-links="true" total-items="totalItems" page="currentPage" class="pagination-sm"
