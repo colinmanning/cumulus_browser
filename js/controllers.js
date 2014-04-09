@@ -93,9 +93,9 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
             }
         });
 
-        modalInstance.result.then(function(){
+        modalInstance.result.then(function () {
             //on ok button press
-        },function(){
+        }, function () {
             //on cancel button press
         });
 
@@ -163,21 +163,13 @@ app.controller('disRecentAssetsController', function ($scope, $modal, $interval,
             }
         });
 
-        modalInstance.result.then(function(){
+        modalInstance.result.then(function () {
             //on ok button press
-        },function(){
+        }, function () {
             //on cancel button press
         });
 
     };
-
-    $scope.$on('$destroy', function () {
-        // Make sure that the interval is destroyed too
-        if ($scope.timedFetchAtcive) {
-            $interval.cancel(timedRefresh);
-
-        }
-    });
 
     $scope.doFetch = function doFetch() {
         $scope.refreshRecentAssetsInCategory();
@@ -189,9 +181,17 @@ app.controller('disRecentAssetsController', function ($scope, $modal, $interval,
         $scope.hasAssets = false;
     };
 
-    if(!disservice.categoryId) {
+    if (!disservice.categoryId) {
         disservice.categoryId = app.rootCategory.id;
     }
+
+    $scope.$on('$destroy', function () {
+        // Make sure that the interval is destroyed too
+        if ($scope.timedFetchAtcive) {
+            $interval.cancel(timedRefresh);
+
+        }
+    });
 
     $scope.$on("refreshRecentFiles", function (event, args) {
         $scope.getRecentAssetsInCategory(args.categoryId, args.recursive, args.direction);
@@ -225,62 +225,64 @@ app.controller('disAssetController', function ($scope, disservice) {
     }
 );
 
+app.controller('disCategoryBreadcrumbsController', function ($scope, disservice, dataService) {
+    $scope.currentCategory = {};
+
+    $scope.$on("updateCurrentCategory", function (event, args) {
+        $scope.currentCategory = args;
+    });
+});
+
 app.controller('disCategoryController', function ($scope, disservice, dataService) {
     $scope.category = {};
     $scope.recursive = false;
 
-    $scope.catTreeArray = [];
     $scope.connection = app.disConnection;
-    $scope.parentCategoryId = app.rootCategory.id;
-    $scope.currentCategoryPath = "";
-    $scope.superParentCategoryId = app.rootCategory.id;
-    $scope.categoryId = app.rootCategory.id;
+    $scope.categoryId = -1;
     $scope.recursive = 'false';
+    $scope.isRoot = true;
+    $scope.currentCategory = undefined;
+    $scope.categories = [];
 
-    $scope.doGetCategories = function doGetCategories(connection, categoryId, recursive, isRoot) {
- //           $scope.categoryId = categoryId
-            disservice.getCategories(connection, categoryId, recursive, isRoot).success(function (response) {
-                if (!isRoot) {
-                    $scope.currentCategoryPath = $scope.currentCategoryPath + ":" + response.name;
+    $scope.doGetCategories = function doGetCategories(connection, category, recursive, isRoot) {
+        // $scope.categoryId = categoryId
+        $scope.isRoot = (category.parent === undefined);
+        disservice.getCategories(connection, category.id, recursive, isRoot).success(function (response) {
+            $scope.categoryId = response.id;
+            $scope.hasSubcategories = (response.hasChildren == true);
+            if ($scope.hasSubcategories) {
+                $scope.categories = [];
+                for (var i = 0; i < response.subcategories.length; i++) {
+                    var scat = response.subcategories[i];
+                    var scat_path = "";
+                    scat_path = category.path + ":" + scat.name;
+                    $scope.categories.push({ id: scat.id, name: scat.name, path: scat_path, parent: category});
                 }
-                $scope.categoryId = response.id;
-                $scope.hasSubcategories = (response.hasChildren == true);
-                if($scope.hasSubcategories) {
-                    if($scope.catTreeArray.indexOf(categoryId) == -1) {
-                        var parentIdIndex = $scope.catTreeArray.indexOf($scope.parentCategoryId);
-                        if($scope.catTreeArray.length>parentIdIndex) {
-                            $scope.catTreeArray[parentIdIndex+1] = categoryId;
-                        }
-                        else {
-                            $scope.catTreeArray.push(categoryId);
-                        }
-                        $scope.superParentCategoryId = $scope.parentCategoryId;
-                        $scope.parentCategoryId = categoryId;
-                    } else {
-                        var catIdIndex = $scope.catTreeArray.indexOf(categoryId);
-                        if (catIdIndex==1 || catIdIndex==0 ) {
-                            $scope.parentCategoryId = $scope.catTreeArray[0];
-                            $scope.superParentCategoryId = $scope.parentCategoryId;
-                        }
-                        if (catIdIndex>1) {
-                            $scope.parentCategoryId = categoryId; //$scope.catTreeArray[catIdIndex-1];
-                            $scope.superParentCategoryId =  $scope.catTreeArray[catIdIndex-1]; //$scope.catTreeArray[catIdIndex-2];
-                        }
-                    }
-                    $scope.categories = response.subcategories;
+            } else {
+                $scope.categories = [];
             }
-                dataService.broadcastData({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
+            $scope.currentCategory = category;
+            dataService.refreshRecentFilesEvent({categoryId: category.id, recursive: true, direction: 'descending'});
         });
     };
 
-    $scope.showCategories = function showCategories(categoryId) {
-        $scope.doGetCategories($scope.connection, categoryId, $scope.recursive, false);
+    $scope.showCategories = function showCategories(category) {
+        $scope.doGetCategories($scope.connection, category, $scope.recursive, false);
+        dataService.updateCurrentCategoryEvent(category);
     }
 
+    $scope.showParentCategory = function showParentCategory() {
+        if ($scope.currentCategory.parent !== undefined) {
+            $scope.showCategories($scope.currentCategory.parent);
+        } else {
+            showRootCategory();
+        }
+    }
+
+
     $scope.showRootCategory = function showRootCategory() {
-        $scope.currentCategoryPath = app.rootCategory.path;
-        $scope.doGetCategories($scope.connection, app.rootCategory.id, $scope.recursive, true);
-        $scope.currentCategoryPath = app.rootCategory.path;
+        $scope.doGetCategories($scope.connection, app.rootCategory, $scope.recursive, true);
+        dataService.updateCurrentCategoryEvent(app.rootCategory);
     }
 
     $scope.showRootCategory();
@@ -352,7 +354,7 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
 
     uploader.bind('completeall', function (event, items) {
         console.info('Complete all', items);
-        dataService.broadcastData({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
+        dataService.refreshRecentFilesEvent({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
         //disservice.getRecentAssetsInCategory(disservice.categoryId, true, "descending");
     });
 });

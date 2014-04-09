@@ -62,8 +62,12 @@ app.factory('disservice', function ($http) {
 app.factory('dataService', function ($rootScope) {
 
     var shared = {};
-    shared.broadcastData = function (data) {
+    shared.refreshRecentFilesEvent = function (data) {
         $rootScope.$broadcast("refreshRecentFiles", data);
+    }
+
+    shared.updateCurrentCategoryEvent = function (data) {
+        $rootScope.$broadcast("updateCurrentCategory", data);
     }
 
     return shared;
@@ -75,14 +79,14 @@ app.factory('alertService', function ($rootScope) {
     $rootScope.alerts = [];
 
     alertService.add = function (type, msg) {
-        $rootScope.alerts.push({type:type, msg:msg});
+        $rootScope.alerts.push({type: type, msg: msg});
     };
 
     alertService.closeAlert = function (index) {
-        $rootScope.alerts.splice (index,1);
+        $rootScope.alerts.splice(index, 1);
     };
 
-    alertService.clear = function() {
+    alertService.clear = function () {
         $rootScope.alerts = [];
     }
 

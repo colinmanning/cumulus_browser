@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="local_xamp">
+  <component name="PublishConfigData" autoUpload="Always" serverName="local_xampp">
     <serverData>
-      <paths name="local_xamp">
+      <paths name="local_xampp">
         <serverdata>
           <mappings>
-            <mapping deploy="\" local="$PROJECT_DIR$" web="/cumulus_browser" />
+            <mapping deploy="/Applications/XAMPP/htdocs/cumulus_browser" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
