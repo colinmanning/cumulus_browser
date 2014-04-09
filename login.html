@@ -38,15 +38,6 @@
             height: 100%;
         }
 
-        canvas {
-            background-color: #f3f3f3;
-            -webkit-box-shadow: 3px 3px 3px 0 #e3e3e3;
-            -moz-box-shadow: 3px 3px 3px 0 #e3e3e3;
-            box-shadow: 3px 3px 3px 0 #e3e3e3;
-            border: 1px solid #c3c3c3;
-            height: 100px;
-            margin: 6px 0 0 6px;
-        }
     </style>
 
 </head>
@@ -54,19 +45,36 @@
 <!-- 1. ng-file-drop | ng-filex-drop="options" -->
 <body ng-app="disBrowser">
 
-<div class="container">
-    <div class="row"
-         style="margin-top:10px;margin-bottom:10px">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div ng-controller="disUserController">
-                    Username: <input name="cumulusUser" ng-model="cumulusUser" value="{{cumulusUser}}"/>
-                    Password: <input name="cumulusPassword" ng-model="cumulusPassword" value="{{cumulusPassword}}"/>
-                    <button ng-click="doValidateUser(cumulusPassword)" >Login</button>
-                </div>
-                <div  ng-controller="AlertController">
-                    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-                </div>
+<div class="container" style="width:300px;margin-top:20px;margin-left:20px;">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3 class="panel-title">Cumulus Uploader Login</h3></div>
+        <div class="panel-body">
+            <div ng-controller="disUserController">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+
+                        <div class="col-sm-12">
+                            <input type="text" name="cumulusUser" ng-model="cumulusUser" value="{{cumulusUser}}"
+                                   class="form-control" id="inputUsername" placeholder="Enter username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-8">
+                            <input type="password" name="cumulusPassword" ng-model="cumulusPassword"
+                                   value="{{cumulusPassword}}" class="form-control" id="inputPassword"
+                                   placeholder="Enter password">
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-primary" ng-click="doValidateUser(cumulusPassword)">
+                                Sign in
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div ng-controller="AlertController">
+                <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
             </div>
         </div>
     </div>

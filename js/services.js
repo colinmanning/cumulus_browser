@@ -41,7 +41,7 @@ app.factory('disservice', function ($http) {
 
     disAPI.validateUser = function (connection, u, p) {
         //mock testing function
-        if (p == 'cumulus') {
+        if (p == 'demo') {
             return $http({
                 method: 'get',
                 url: app.baseUrl
