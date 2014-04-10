@@ -54,3 +54,20 @@ app.directive('disRecentAssetList', function () {
         }
     }
 )
+
+app.directive('checkUser', ['$rootScope', 'authService', function ($root, authService) {
+
+    return {
+        link: function (scope) {
+           var isAlive = authService.isSessionAlive();
+           $root.$watch(!isAlive, function () {
+                console.info('fire!');
+               if(!isAlive) {
+                   authService.goToLoginPage();
+               }
+
+            });
+        }
+    }
+}])
+

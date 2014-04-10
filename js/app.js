@@ -1,6 +1,6 @@
 (function(){
 
-    var app = angular.module('disBrowser', ['angularFileUpload', 'ui.bootstrap', 'ngCookies', 'ngRoute', 'uploaderControllers']);
+    var app = angular.module('disBrowser', ['angularFileUpload', 'ui.bootstrap', 'ngCookies', 'ngRoute', 'uploaderControllers', 'ivpusic.cookie']);
 
     app.config(['$routeProvider',
         function ($routeProvider) {
@@ -25,5 +25,7 @@
     app.recentFileFetchInterval = 60;
     app.recentFileRefreshButtonShow = true;
     app.recentFileFetchCount = 10;
+    app.sessionDuration = 1; //in minutes
+    app.authCookieName = 'setantaMediaApprover';
 
 })();
