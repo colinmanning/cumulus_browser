@@ -305,19 +305,22 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
     //    return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
     //});
 
+    $scope.$on("updateCurrentCategory", function (event, args) {
+        $scope.uploader.clearQueue();
+    });
 
     // REGISTER HANDLERS
 
     uploader.bind('afteraddingfile', function (event, item) {
-        console.info('After adding a file', item);
+        //console.info('After adding a file', item);
     });
 
     uploader.bind('whenaddingfilefailed', function (event, item) {
-        console.info('When adding a file failed', item);
+        //console.info('When adding a file failed', item);
     });
 
     uploader.bind('afteraddingall', function (event, items) {
-        console.info('After adding all files', items);
+        //console.info('After adding all files', items);
     });
 
     uploader.bind('beforeupload', function (event, item) {

@@ -18,12 +18,19 @@
                 });
         }]);
 
-    app.baseUrl = "http://dis.berlinirish.com";
-    app.disConnection = "sample-2";
+    app.baseUrl = "http://localhost:8084/disweb";
+    app.disConnection = "sample";
     app.disView = "overview";
     app.rootCategory = { id: 1, path: "$Categories"};
     app.recentFileFetchInterval = -1;
     app.recentFileRefreshButtonShow = true;
     app.recentFileFetchCount = 10;
+
+    app.metadataPanels = {
+        fileUploadMetadata: [
+            { sequence: 1, type: 'text', fieldName: 'Caption', displayName: 'Captionm', mandatory: true, default: ''},
+            { sequence: 1, type: 'textarea', fieldName: 'Notes', displayName: 'Notes', mandatory: false, default: ''}
+        ]
+    }
 
 })();
