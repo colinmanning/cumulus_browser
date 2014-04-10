@@ -113,6 +113,7 @@ app.controller('disRecentAssetsController', function ($scope, $modal, $interval,
     $scope.currentAsset = {}
     $scope.totalItems = 0;
     $scope.timedFetchAtcive = (app.recentFileFetchInterval >= 10);
+    $scope.showRefreshButton = app.recentFileRefreshButtonShow;
     $scope.currentSearchDetails = {};
     this.timedRefresh;
 
