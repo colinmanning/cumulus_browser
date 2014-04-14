@@ -27,7 +27,7 @@
     app.disView = "overview";
     app.rootCategory = { id: 1, path: "$Categories"};
     app.recentFileFetchInterval = -1;
-    app.recentFileRefreshButtonShow = true;
+    app.recentFileRefreshButtonShow = false;
     app.recentFileFetchCount = 10;
     app.sessionDuration = 1; //in minutes
     app.authCookieName = 'setantaMediaApprover';
