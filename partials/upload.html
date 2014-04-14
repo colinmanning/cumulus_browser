@@ -1,5 +1,5 @@
 <div ng-controller="authController"/>
-<div class="container">
+<div class="container-fluid">
     <div class="row"
          style="margin-top:10px;margin-bottom:10px">
         <div ng-controller="disCategoryBreadcrumbsController">
@@ -7,14 +7,14 @@
         </div>
         <div class="row"
              style="margin-top:10px;margin-bottom:10px">
-            <div class="col-md-3" style="margin-bottom: 20px">
+            <div class="col-md-2" style="margin-bottom: 20px">
 
-                <div ng-controller="disCategoryController">
+            <div ng-controller="disCategoryController">
                     <dis-category-panel/>
                 </div>
             </div>
-            <div class="col-md-5" style="margin-bottom: 20px">
-                <div ng-controller="disFileUploadController as file_upload">
+            <div class="col-md-6" style="margin-bottom: 20px">
+            <div ng-controller="disFileUploadController as file_upload">
                     <dis-file-upload-panel/>
                 </div>
             </div>
