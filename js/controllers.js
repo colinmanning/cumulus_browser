@@ -2,12 +2,11 @@
 
 var uploaderControllers = angular.module('uploaderControllers', []);
 
-uploaderControllers.controller('disUserController', function ($location, $scope, disservice, alertService, $cookies, $routeParams) {
+uploaderControllers.controller('disUserController', function ($location, $scope, disservice, alertService, $cookies, $routeParams, authService) {
     $scope.cumulusUser = $routeParams.cu;
     $scope.user = {};
     $scope.failedLogins = 0;
     //$scope.loggedIn = false;
-
 
     $scope.doValidateUser = function doValidateUser(password) {
 
@@ -17,34 +16,33 @@ uploaderControllers.controller('disUserController', function ($location, $scope,
             $scope.user = response;
             console.info("login successful");
             alertService.clear();
-            //alertService.add ('success', 'Successfully logged in');
-            $cookies.setantaMediaApprover = "true";
+
+            authService.setSession (app.sessionDuration, $scope.cumulusUser);
             window.location = "#/upload";
         }).error(function (response) {
             $scope.failedLogins += 1;
             $scope.user = {};
             $scope.loggedIn = false;
             console.info("login failed");
-            $cookies.setantaMediaApprover = "";
+
+            authService.logout();
             alertService.clear();
             alertService.add('danger', 'Failed login attempts: ' + $scope.failedLogins);
+            authService.goToLoginPage();
         });
     }
 });
 
-app.controller('authController', function ($scope, $cookies) {
-
-    if (!$cookies.setantaMediaApprover) {
-        window.location = "login.html?cu="+$scope.cumulusUser;
+app.controller('authController', function ($scope, authService) {
+    if(!authService.isSessionAlive()) {
+        authService.goToLoginPage();
     }
-
 });
 
 
 app.controller('alertController', function ($scope, alertService) {
     $scope.closeAlert = function (index) {
         alertService.closeAlert(index);
-        ;
     };
 
 });
@@ -230,7 +228,7 @@ app.controller('disCategoryBreadcrumbsController', function ($scope, disservice,
     });
 });
 
-app.controller('disCategoryController', function ($scope, disservice, dataService) {
+app.controller('disCategoryController', function ($scope, disservice, dataService, authService) {
     $scope.category = {};
     $scope.recursive = false;
 
@@ -242,7 +240,10 @@ app.controller('disCategoryController', function ($scope, disservice, dataServic
     $scope.categories = [];
 
     $scope.doGetCategories = function doGetCategories(connection, category, recursive, isRoot) {
-        // $scope.categoryId = categoryId
+
+        if(!authService.isSessionAlive()) {
+           authService.goToLoginPage();
+        }
         $scope.isRoot = (category.parent === undefined);
         disservice.getCategories(connection, category.id, recursive, isRoot).success(function (response) {
             $scope.categoryId = response.id;
@@ -285,7 +286,7 @@ app.controller('disCategoryController', function ($scope, disservice, dataServic
     $scope.showRootCategory();
 });
 
-app.controller('disFileUploadController', function ($scope, $fileUploader, disservice, dataService) {
+app.controller('disFileUploadController', function ($scope, $fileUploader, disservice, dataService, authService) {
     // Creates a uploader
     var uploader = $scope.uploader = $fileUploader.create({
         scope: $scope,
@@ -325,6 +326,9 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
 
     uploader.bind('beforeupload', function (event, item) {
         console.info('Before upload', item);
+        if(!authService.isSessionAlive()) {
+            authService.goToLoginPage();
+        }
     });
 
     uploader.bind('progress', function (event, item, progress) {

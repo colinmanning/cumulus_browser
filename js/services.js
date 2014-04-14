@@ -94,4 +94,39 @@ app.factory('alertService', function ($rootScope) {
 
 });
 
+app.factory('authService', function ($rootScope, ipCookie) {
+
+    var authService = {};
+
+    authService.user;
+
+
+    authService.isSessionAlive = function () {
+
+        return  ipCookie(app.authCookieName);
+
+    };
+
+    authService.setSession = function (duration, user) {
+        authService.user = user;
+        ipCookie(app.authCookieName, 'true', { 'expires': duration, expirationUnit: 'minutes'});
+    }
+
+    authService.logout = function () {
+        ipCookie.remove(app.authCookieName);
+    }
+
+    authService.goToLoginPage = function () {
+        if (authService.user != undefined) {
+            window.location = "#/login/"+authService.user;
+        } else {
+            window.location = "#/login/";
+        }
+
+    }
+
+    return authService;
+
+});
+
 

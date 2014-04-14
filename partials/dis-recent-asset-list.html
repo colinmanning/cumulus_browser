@@ -11,18 +11,19 @@
                         previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
                         items-per-page="pageSize" ng-show="$parent.showPager"
                         on-select-page="selectPage"></pagination>
-            <table class="table-striped  table-condensed">
+            <table class="table-striped  table-condensed" style="table-layout: fixed; width: 338px;">
                 <thead>
                 <tr>
-                    <th width="110">Preview</th>
-                    <th width="200">Name</th>
-                    <th width="200">Last Modified</th>
+                    <th >Preview</th>
+                    <th >Name</th>
+                    <th >Last Modified</th>
                 </tr>
                 </thead>
                 <tbody>
+
                 <tr ng-repeat="asset in assets.records">
                     <td ng-click="doPreview(asset)"><img src="{{asset.preview_very_small}}"/></td>
-                    <td>{{asset.Record_Name}}</td>
+                    <td style="overflow:hidden;width: 150px">{{asset.Record_Name}}</td>
                     <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:MM:ss'}}</td>
                 </tr>
                 </tbody>
