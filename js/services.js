@@ -117,7 +117,12 @@ app.factory('authService', function ($rootScope, ipCookie) {
     }
 
     authService.goToLoginPage = function () {
-        window.location = "#/login/"+authService.user;
+        if (authService.user != undefined) {
+            window.location = "#/login/"+authService.user;
+        } else {
+            window.location = "#/login/";
+        }
+
     }
 
     return authService;

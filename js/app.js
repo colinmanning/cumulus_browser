@@ -9,6 +9,10 @@
                     templateUrl: 'partials/login.html',
                     controller: 'disUserController'
                 }).
+                when('/login', {
+                    templateUrl: 'partials/login.html',
+                    controller: 'disUserController'
+                }).
                 when('/upload', {
                     templateUrl: 'partials/upload.html',
                     controller: 'disUserController'
