@@ -1,6 +1,7 @@
 (function(){
 
-    var app = angular.module('disBrowser', ['angularFileUpload', 'ui.bootstrap', 'ngCookies', 'ngRoute', 'uploaderControllers', 'ivpusic.cookie']);
+    var app = angular.module('disBrowser', ['angularFileUpload', 'ui.bootstrap', 'ngCookies', 'ngRoute', 'ivpusic.cookie',
+        'uploaderControllers']);
 
     app.config(['$routeProvider',
         function ($routeProvider) {
@@ -17,26 +18,27 @@
                     templateUrl: 'partials/upload.html',
                     controller: 'disUserController'
                 }).
+                when('/upload_norecent', {
+                    templateUrl: 'partials/upload_no_recent.html',
+                    controller: 'disUserController'
+                }).
                 otherwise({
                     redirectTo: '/login/:cu'
                 });
         }]);
 
-    app.baseUrl = "http://localhost:8084/disweb";
-    app.disConnection = "sample";
+    app.baseUrl = "http://dis.berlinirish.com/";
+    app.disConnection = "sample-2";
     app.disView = "overview";
     app.rootCategory = { id: 1, path: "$Categories"};
     app.recentFileFetchInterval = -1;
-    app.recentFileRefreshButtonShow = false;
+    app.recentFileRefreshButtonShow = true;
     app.recentFileFetchCount = 10;
-    app.sessionDuration = 1; //in minutes
+    app.sessionDuration = 30; //in minutes
     app.authCookieName = 'setantaMediaApprover';
+    app.enableMtadata = true;
 
-    app.metadataPanels = {
-        fileUploadMetadata: [
-            { sequence: 1, type: 'text', fieldName: 'Caption', displayName: 'Captionm', mandatory: true, default: ''},
-            { sequence: 1, type: 'textarea', fieldName: 'Notes', displayName: 'Notes', mandatory: false, default: ''}
-        ]
-    }
+    app.error_invalidMetadata = 'Invalid metadata - upload disabled'
+
 
 })();

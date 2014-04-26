@@ -1,33 +1,33 @@
-<div class="panel panel-default">
-    <div class="panel-heading"><h3 class="panel-title">Recent Uploaded Files</h3></div>
-    <div class="panel-body">
-        <div style="margin-bottom: 10px">
-            <div style="margin-bottom: 6px">
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <span class="h3 panel-title">Most Recent Uploads</span>
+        <span style="margin-left:10px">
                 <button class="btn btn-primary" ng-click="doFetch()" ng-show="showRefreshButton"><span
                         class="glyphicon glyphicon-refresh" tooltip="Refresh recent uploaded files list"></span>
                 </button>
-            </div>
-            <pagination boundary-links="true" total-items="totalItems" page="currentPage" class="pagination-sm"
-                        previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"
-                        items-per-page="pageSize" ng-show="$parent.showPager"
-                        on-select-page="selectPage"></pagination>
-            <table class="table-striped  table-condensed" style="table-layout: fixed; width: 338px;">
-                <thead>
-                <tr>
-                    <th >Preview</th>
-                    <th >Name</th>
-                    <th >Last Modified</th>
-                </tr>
-                </thead>
-                <tbody>
+        </span>
+    </div>
+    <div class="panel-body">
+        <div style="margin-bottom: 10px">
+            <div style="margin-bottom: 6px">
+                <table class="table-striped  table-condensed" style="table-layout: fixed; width: 100%;">
+                    <thead>
+                    <tr>
+                        <th>Preview</th>
+                        <th>Name</th>
+                        <th>Last Modified</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                <tr ng-repeat="asset in assets.records">
-                    <td ng-click="doPreview(asset)"><img src="{{asset.preview_very_small}}"/></td>
-                    <td style="overflow:hidden;width: 150px">{{asset.Record_Name}}</td>
-                    <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:MM:ss'}}</td>
-                </tr>
-                </tbody>
-            </table>
+                    <tr ng-repeat="asset in assets.records">
+                        <td ng-click="doPreview(asset)"><img src="{{asset.preview_very_small}}"/></td>
+                        <td style="overflow:hidden;width: 150px">{{asset.Record_Name}}</td>
+                        <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:MM:ss'}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

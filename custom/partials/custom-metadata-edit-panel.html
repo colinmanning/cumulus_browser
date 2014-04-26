@@ -1,0 +1,51 @@
+<div>
+    <div class="container" style="width:100%">
+        <div class="panel  panel-primary">
+            <div class="panel-heading"><h3 class="panel-title">Metadata</h3></div>
+            <div class="panel-body">
+                <form name={{formname}} class="form-horizontal" novalidate>
+                    <div class="form-group has-feedback"
+                         ng-class="{
+                                 'has-error' : {{formname}}.caption.$invalid ,
+                                 'has-success' :  {{formname}}.caption.$valid
+                            }">
+                        <label for="captionid" class="control-label col-sm-3">{{fields.caption.displayname}}</label>
+
+                        <div class="col-sm-9">
+                            <input name="caption" class="form-control" id="captionid" type="text"
+                                   ng-model="fields.caption.value"
+                                   placeholder="{{fields.caption.helptext}}"
+                                   required
+                                   ng-minlength="{{fields.caption.minlength}}">
+
+                        <span class="glyphicon form-control-feedback" ng-show="true"
+                              ng-class="{ 'glyphicon-remove' : {{formname}}.caption.$invalid, 'glyphicon-ok' : {{formname}}.caption.$valid }">
+                        </span>
+
+                            <p ng-show="{{formname}}.caption.$invalid" class="help-block">
+                                {{fields.caption.errortext}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback"
+                         ng-class="{ 'has-error' : {{formname}}.notes.$invalid, 'has-success' : {{formname}}.notes.$valid }">
+                        <label for="notesid" class="control-label col-sm-3">{{fields.notes.displayname}}</label>
+
+                        <div class="col-sm-9">
+                            <textarea name="notes" class="form-control" id="notesid" rows="3"
+                                      ng-model="fields.notes.value"
+                                      placeholder="{{fields.otes.helptext}}"
+                                      ng-maxlength="{{fields.notes.maxlength}}"/>
+                                <span class="glyphicon form-control-feedback" ng-show="true"
+                                      ng-class="{ 'glyphicon-remove' : {{formname}}.notes.$invalid, 'glyphicon-ok' : {{formname}}.notes.$valid }">
+                                </span>
+
+                            <p ng-show="{{formname}}.notes.$invalid" class="help-block">
+                                {{fields.notes.errortext}}</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

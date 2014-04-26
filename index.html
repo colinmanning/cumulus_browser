@@ -7,6 +7,7 @@
     <script src="lib/es5-shim-min.js"></script>
     <script src="lib/jquery-1.11.0.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/dis-browser.css"/>
 
     <script src="lib/bootstrap.min.js"></script>
     <script src="lib/angular.min.js"></script>
@@ -14,15 +15,19 @@
     <script src="lib/angular-cookies.min.js"></script>
     <script src="lib/angular-route.min.js"></script>
     <script src="lib/ui-bootstrap-tpls-0.10.0.js"></script>
+    <script src="lib/underscore-1.6.0.min.js"></script>
 
     <script src="lib/angular-file-upload.js"></script>
 
     <script src="js/app.js"></script>
+    <script src="js/filters.js"></script>
     <script src="js/services.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
     <script src="js/directives_common.js"></script>
 
+    <script src="custom/js/custom-services.js"></script>
+    <script src="custom/js/custom-controllers.js"></script>
     <style>
         .my-drop-zone {
             border: dotted 3px lightgray;
@@ -30,26 +35,13 @@
 
         .ng-file-over {
             border: dotted 3px red;
-        }
-
-        /* Default class applied to drop zones on over */
-        .another-file-over-class {
-            border: dotted 3px green;
+            background-color: oldlace;
         }
 
         html, body {
             height: 100%;
         }
 
-        canvas {
-            background-color: #f3f3f3;
-            -webkit-box-shadow: 3px 3px 3px 0 #e3e3e3;
-            -moz-box-shadow: 3px 3px 3px 0 #e3e3e3;
-            box-shadow: 3px 3px 3px 0 #e3e3e3;
-            border: 1px solid #c3c3c3;
-            height: 100px;
-            margin: 6px 0 0 6px;
-        }
     </style>
 </head>
 <body ng-app="disBrowser" >

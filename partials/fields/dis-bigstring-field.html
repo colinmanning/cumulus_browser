@@ -1,0 +1,11 @@
+<div class="form-group has-feedback {{field.errorStatus}}">
+    <label for="{{field.fieldId}}" class="control-label col-sm-3">{{field.displayName}}</label>
+
+    <div class="col-sm-9">
+        <textarea class="form-control" id="{{field.fieldId}}" rows="{{field.rows}}"
+                  name="{{field.name}}" ng-model="field.value" value="{{fields.value}}"
+                  placeholder="{{field.prompt}}"/>
+        <span class="glyphicon {{errorIconClass}} form-control-feedback"></span>
+    </div>
+    <span class="glyphicon {{field.errorStatusIcon}} form-control-feedback"></span>
+</div>

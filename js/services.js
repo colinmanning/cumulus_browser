@@ -41,6 +41,12 @@ app.factory('disservice', function ($http) {
 
     disAPI.validateUser = function (connection, u, p) {
         //mock testing function
+        var demoUser = {
+            username: "demo53",
+            firstname: "Demo",
+            lastname: "User",
+            email: "colin@printoutsource.com"
+        }
         if (u = 'demo53' && p == 'demo13') {
             return $http({
                 method: 'get',
@@ -70,6 +76,18 @@ app.factory('dataService', function ($rootScope) {
         $rootScope.$broadcast("updateCurrentCategory", data);
     }
 
+    shared.metadataVaildationEvent = function (data) {
+        $rootScope.$broadcast("metadataVaildation", data);
+    }
+
+    shared.sendMetadatataEvent = function (data) {
+        $rootScope.$broadcast("sendMetadata", data);
+    }
+
+    shared.requestMetadatataEvent = function (data) {
+        $rootScope.$broadcast("requestMetadata", data);
+    }
+
     return shared;
 });
 
@@ -77,6 +95,7 @@ app.factory('alertService', function ($rootScope) {
 
     var alertService = {};
     $rootScope.alerts = [];
+    $rootScope.uploadAlerts = [];
 
     alertService.add = function (type, msg) {
         $rootScope.alerts.push({type: type, msg: msg});
@@ -90,6 +109,18 @@ app.factory('alertService', function ($rootScope) {
         $rootScope.alerts = [];
     }
 
+    alertService.addUploadAlert = function (type, msg) {
+        $rootScope.uploadAlerts.push({type: type, msg: msg});
+    };
+
+    alertService.closeUploadAlert = function (index) {
+        $rootScope.uploadAlerts.splice(index, 1);
+    };
+
+    alertService.clearUploadAlerts = function () {
+        $rootScope.uploadAlerts = [];
+    }
+
     return alertService;
 
 });
@@ -99,12 +130,10 @@ app.factory('authService', function ($rootScope, ipCookie) {
     var authService = {};
 
     authService.user;
-
+    authService.userData;
 
     authService.isSessionAlive = function () {
-
         return  ipCookie(app.authCookieName);
-
     };
 
     authService.setSession = function (duration, user) {
@@ -118,11 +147,18 @@ app.factory('authService', function ($rootScope, ipCookie) {
 
     authService.goToLoginPage = function () {
         if (authService.user != undefined) {
-            window.location = "#/login/"+authService.user;
+            window.location = "#/login/" + authService.user;
         } else {
             window.location = "#/login/";
         }
+    }
 
+    authService.getUserData = function () {
+        return authService.userData;
+    }
+
+    authService.setUserData = function (userData) {
+        authService.userData = userData;
     }
 
     return authService;

@@ -12,7 +12,7 @@
       <paths name="local_xampp">
         <serverdata>
           <mappings>
-            <mapping deploy="/Applications/XAMPP/htdocs/cumulus_browser" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

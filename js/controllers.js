@@ -6,6 +6,12 @@ uploaderControllers.controller('disUserController', function ($location, $scope,
     $scope.cumulusUser = $routeParams.cu;
     $scope.user = {};
     $scope.failedLogins = 0;
+    $scope.demoUser = {
+        username: "demo53",
+        firstname: "Demo",
+        lastname: "User",
+        email: "colin@printoutsource.com"
+    }
     //$scope.loggedIn = false;
 
     $scope.doValidateUser = function doValidateUser(password) {
@@ -13,11 +19,12 @@ uploaderControllers.controller('disUserController', function ($location, $scope,
         disservice.validateUser(this.connection, $scope.cumulusUser, password).success(function (response) {
             $scope.failedLogins = 0;
             $scope.loggedIn = true;
-            $scope.user = response;
+            //$scope.user = response;
+            $scope.user = $scope.demoUser;
+            authService.setUserData($scope.demoUser);
             console.info("login successful");
             alertService.clear();
-
-            authService.setSession (app.sessionDuration, $scope.cumulusUser);
+            authService.setSession(app.sessionDuration, $scope.cumulusUser);
             window.location = "#/upload";
         }).error(function (response) {
             $scope.failedLogins += 1;
@@ -31,23 +38,35 @@ uploaderControllers.controller('disUserController', function ($location, $scope,
             authService.goToLoginPage();
         });
     }
+
+    $scope.doLogout = function doLogout() {
+        authService.logout();
+        authService.goToLoginPage();
+    }
 });
 
-app.controller('authController', function ($scope, authService) {
-    if(!authService.isSessionAlive()) {
+uploaderControllers.controller('authController', function ($scope, authService) {
+    if (!authService.isSessionAlive()) {
         authService.goToLoginPage();
     }
 });
 
 
-app.controller('alertController', function ($scope, alertService) {
+uploaderControllers.controller('alertController', function ($scope, alertService) {
     $scope.closeAlert = function (index) {
         alertService.closeAlert(index);
     };
 
 });
 
-app.controller('disAssetsController', function ($scope, $modal, disservice) {
+uploaderControllers.controller('uploadAlertController', function ($scope, alertService) {
+    $scope.closeAlert = function (index) {
+        alertService.closeUploadAlert(index);
+    };
+
+});
+
+uploaderControllers.controller('disAssetsController', function ($scope, $modal, disservice) {
     $scope.assets = {};
     this.connection = app.disConnection;
     this.view = app.disView;
@@ -75,26 +94,6 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
 
     };
 
-    $scope.doPreview = function doPreview(asset) {
-        $scope.currentAsset = asset;
-        var modalInstance = $modal.open({
-            templateUrl: 'partials/dis-asset-preview.html',
-            controller: ModalInstanceCtrl,
-            resolve: {
-                items: function () {
-                    return asset;
-                }
-            }
-        });
-
-        modalInstance.result.then(function () {
-            //on ok button press
-        }, function () {
-            //on cancel button press
-        });
-
-    };
-
     var doClear = function doClear() {
         this.searchText = '';
         $scope.assets = {};
@@ -105,7 +104,7 @@ app.controller('disAssetsController', function ($scope, $modal, disservice) {
 
 });
 
-app.controller('disRecentAssetsController', function ($scope, $modal, $interval, disservice) {
+uploaderControllers.controller('disRecentAssetsController', function ($scope, $modal, $interval, disservice) {
     $scope.assets = {};
     $scope.connection = app.disConnection;
     $scope.view = app.disView;
@@ -148,17 +147,17 @@ app.controller('disRecentAssetsController', function ($scope, $modal, $interval,
 
     $scope.doPreview = function doPreview(asset) {
         $scope.currentAsset = asset;
-        var modalInstance = $modal.open({
+        var previewModalInstance = $modal.open({
             templateUrl: 'partials/dis-asset-preview.html',
-            controller: ModalInstanceCtrl,
+            controller: 'disPreviewInstanceController',
             resolve: {
-                items: function () {
-                    return asset;
+                asset: function () {
+                    return $scope.currentAsset;
                 }
             }
         });
 
-        modalInstance.result.then(function () {
+        previewModalInstance.result.then(function () {
             //on ok button press
         }, function () {
             //on cancel button press
@@ -201,8 +200,9 @@ app.controller('disRecentAssetsController', function ($scope, $modal, $interval,
 });
 
 
-var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
-    $scope.items = items;
+uploaderControllers.controller('disPreviewInstanceController', function ($scope, $modalInstance, asset) {
+
+    $scope.asset = asset;
 
     $scope.ok = function () {
         $modalInstance.close($scope);
@@ -211,24 +211,17 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
-};
+});
 
-
-app.controller('disAssetController', function ($scope, disservice) {
-        $scope.asset = {};
-        $scope.dirty = false;
-    }
-);
-
-app.controller('disCategoryBreadcrumbsController', function ($scope, disservice, dataService) {
-    $scope.currentCategory = {};
+uploaderControllers.controller('disCategoryBreadcrumbsController', function ($scope, disservice, dataService) {
+    $scope.currentCategory = app.rootCategory;
 
     $scope.$on("updateCurrentCategory", function (event, args) {
         $scope.currentCategory = args;
     });
 });
 
-app.controller('disCategoryController', function ($scope, disservice, dataService, authService) {
+uploaderControllers.controller('disCategoryController', function ($scope, disservice, dataService, authService) {
     $scope.category = {};
     $scope.recursive = false;
 
@@ -241,8 +234,8 @@ app.controller('disCategoryController', function ($scope, disservice, dataServic
 
     $scope.doGetCategories = function doGetCategories(connection, category, recursive, isRoot) {
 
-        if(!authService.isSessionAlive()) {
-           authService.goToLoginPage();
+        if (!authService.isSessionAlive()) {
+            authService.goToLoginPage();
         }
         $scope.isRoot = (category.parent === undefined);
         disservice.getCategories(connection, category.id, recursive, isRoot).success(function (response) {
@@ -286,34 +279,68 @@ app.controller('disCategoryController', function ($scope, disservice, dataServic
     $scope.showRootCategory();
 });
 
-app.controller('disFileUploadController', function ($scope, $fileUploader, disservice, dataService, authService) {
+uploaderControllers.controller('disFileUploadController', function ($scope, $modal, $q, $fileUploader, disservice, dataService, authService, alertService, customMetadataService) {
+    $scope.uploadMetadata = [];
+    $scope.enableMtadata = app.enableMtadata;
+    $scope.canUpload = false;
+    $scope.metadataIsValid = customMetadataService.getIsvalid();
+
+
+    $scope.setupAlerts = function setupAlerts() {
+        alertService.clearUploadAlerts();
+        if (!$scope.metadataIsValid) {
+            alertService.addUploadAlert('danger', app.error_invalidMetadata);
+        }
+        $scope.checkCanUpload();
+    }
+
+    $scope.$on('customMetadataVaildation', function (event, args) {
+        $scope.metadataIsValid = customMetadataService.getIsvalid();
+        $scope.setupAlerts();
+    });
+
     // Creates a uploader
     var uploader = $scope.uploader = $fileUploader.create({
         scope: $scope,
         url: app.baseUrl + '/file/' + app.disConnection + '/upload',
-        formData: [
-            { "fulcrum_Caption": '' }
-        ]
+        formData: $scope.uploadMetadata
     });
-
-
-    // ADDING FILTERS
-
-    // Images only
-    //uploader.filters.push(function (item /*{File|HTMLInputElement}*/) {
-    //    var type = uploader.isHTML5 ? item.type : '/' + item.value.slice(item.value.lastIndexOf('.') + 1);
-    //    type = '|' + type.toLowerCase().slice(type.lastIndexOf('/') + 1) + '|';
-    //    return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-    //});
 
     $scope.$on("updateCurrentCategory", function (event, args) {
         $scope.uploader.clearQueue();
     });
+    ;
+    $scope.setupUploadMetadata = function setupUploadMetadata(fields) {
+        $scope.uploadMetadata = [];
+        var fvs = _.values(fields);
+        for (var i = 0; i < fvs.length; i++) {
+            var field = {};
+            field["fulcrum_" + fvs[i].damname] = fvs[i].value;
+            $scope.uploadMetadata.push(field);
+        }
+        ;
+        var u = authService.getUserData();
+        var uf = {};
+        uf["fulcrum_Uploaded By"] = u.firstname + " " + u.lastname;
+        $scope.uploadMetadata.push(uf);
+        $scope.uploader.formData = $scope.uploadMetadata;
+    };
 
-    // REGISTER HANDLERS
+    $scope.asyncRequestMetadata = function asyncRequestMetadata() {
+        var deferred = $q.defer();
+        customMetadataService.requestMetadatataEvent();
+        setTimeout(function () {
+            $scope.$apply(function () {
+                deferred.resolve(customMetadataService.getFields());
+            });
+        }, 200);
+        return deferred.promise;
+    };
 
+    // Register handlers
     uploader.bind('afteraddingfile', function (event, item) {
         //console.info('After adding a file', item);
+        $scope.checkCanUpload();
     });
 
     uploader.bind('whenaddingfilefailed', function (event, item) {
@@ -322,44 +349,62 @@ app.controller('disFileUploadController', function ($scope, $fileUploader, disse
 
     uploader.bind('afteraddingall', function (event, items) {
         //console.info('After adding all files', items);
+        $scope.checkCanUpload();
     });
 
     uploader.bind('beforeupload', function (event, item) {
         console.info('Before upload', item);
-        if(!authService.isSessionAlive()) {
+        if (!authService.isSessionAlive()) {
             authService.goToLoginPage();
         }
+        var fds = $scope.asyncRequestMetadata();
+        fds.then(function (fields) {
+            $scope.setupUploadMetadata(fields);
+        });
+
     });
+
 
     uploader.bind('progress', function (event, item, progress) {
         //console.info('Progress: ' + progress, item);
+        $scope.checkCanUpload();
     });
 
     uploader.bind('success', function (event, xhr, item, response) {
         disservice.assignItemToCategory(disservice.connection, response.id, disservice.categoryId);
+        $scope.checkCanUpload();
         console.info('Success', xhr, item, response);
     });
 
     uploader.bind('cancel', function (event, xhr, item) {
+        $scope.checkCanUpload();
         console.info('Cancel', xhr, item);
     });
 
     uploader.bind('error', function (event, xhr, item, response) {
+        $scope.checkCanUpload();
         console.info('Error', xhr, item, response);
     });
 
     uploader.bind('complete', function (event, xhr, item, response) {
+        $scope.checkCanUpload();
         console.info('Complete', xhr, item, response);
     });
 
     uploader.bind('progressall', function (event, progress) {
+        $scope.checkCanUpload();
         //console.info('Total progress: ' + progress);
     });
 
     uploader.bind('completeall', function (event, items) {
+        $scope.checkCanUpload();
         console.info('Complete all', items);
         dataService.refreshRecentFilesEvent({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
-        //disservice.getRecentAssetsInCategory(disservice.categoryId, true, "descending");
     });
+
+    $scope.checkCanUpload = function () {
+        $scope.canUpload = ($scope.uploader.queue.length && $scope.uploader.getNotUploadedItems().length && $scope.metadataIsValid);
+    }
+
 });
 
