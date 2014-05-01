@@ -27,7 +27,7 @@ app.factory('disservice', function ($http) {
 
     disAPI.assignItemToCategory = function (connection, itemId, categoryId) {
         return $http({
-            method: 'JSONP',
+            method: 'GET',
             url: app.baseUrl + '/data/' + connection + '/addrecordtocategory?callback=JSON_CALLBACK&recordid=' + itemId + '&categoryid=' + categoryId
         });
     }
@@ -36,6 +36,15 @@ app.factory('disservice', function ($http) {
         return $http({
             method: 'JSONP',
             url: app.baseUrl + '/search/' + connection + '/categoryquery?callback=JSON_CALLBACK&id=' + categoryId + '&recursive=' + recursive + '&view=' + view + '&offset=' + offset + '&count=' + count + '&sort=Asset Creation Date&direction=' + direction
+        });
+    }
+
+    disAPI.postMetadata = function (connection, itemId, upload_data) {
+        return $http({
+            method: 'POST',
+            url: app.baseUrl + '/data/' + connection + '/update?id=' + itemId,
+            headers: {'Content-Type': 'application/json; charset=utf8'},
+            data: upload_data
         });
     }
 

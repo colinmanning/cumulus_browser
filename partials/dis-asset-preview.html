@@ -3,12 +3,27 @@
         <h3>File: {{asset.Record_Name}}</h3>
     </div>
     <div class="modal-body">
-        <img src="{{asset.preview_medium}}">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="panel panel-info" style="padding:16px">
+                    <img src="{{asset.preview_medium}}" class="img-responsive center-block">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">Id:</div>
+                <div class="col-md-8">{{asset.ID}}</div>
+                <div class="col-md-4">Caption:</div>
+                <div class="col-md-8">{{asset.Caption | checkforempty}}</div>
+                <div class="col-md-4">Uploaded By:</div>
+                <div class="col-md-8">{{asset.Uploaded_By | checkforempty}}</div>
+                <div class="col-md-4">Created At:</div>
+                <div class="col-md-8"> {{asset.Asset_Creation_Date | date:'dd-MM-yy HH:mm:ss'}}</div>
+                <div class="col-md-4">Last Modified:</div>
+                <div class="col-md-8"> {{asset.Asset_Modification_Date | date:'dd-MM-yy HH:mm:ss'}}</div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
-        <p style="text-align: left;">Id: {{asset.ID}}</p>
-
-        <p style="text-align: left;">Caption: {{asset.Caption}}</p>
         <button class="btn btn-primary" ng-click="ok()">Close</button>
     </div>
 </div>

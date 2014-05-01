@@ -35,11 +35,6 @@ app.factory('customMetadataService', function ($rootScope) {
         $rootScope.$broadcast("customMetadataVaildation", data);
     }
 
-
-    metadataService.requestMetadatataEvent = function () {
-        $rootScope.$broadcast("customRequestMetadata");
-    }
-
     var formname = "metadataform";
     var isvalid = false;
 
@@ -56,7 +51,7 @@ app.factory('customMetadataService', function ($rootScope) {
         value: "",
         displayname: "Notes",
         damname: "Notes",
-        maxlength: 20,
+        maxlength: 100,
         helptext: "Enter notes",
         errortext: "Notes cannot have more than 20 characters "
     };

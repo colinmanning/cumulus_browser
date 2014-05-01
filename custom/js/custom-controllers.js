@@ -8,17 +8,16 @@ uploaderControllers.controller('customMetadataController', function ($scope, dat
     $scope.formname = customMetadataService.getFormname();
     $scope.isvalid = customMetadataService.getIsvalid();
 
+    $scope.$watchCollection('[fields.caption.value, fields.notes.value]', function (newValue, oldValue) {
+        customMetadataService.setFields($scope.fields);
+    });
+
     $scope.$watch('metadataform.$valid', function (newValue, oldValue) {
         //if (newValue === oldValue) return;
         $scope.isvalid = newValue;
         customMetadataService.setIsvalid(newValue);
-        customMetadataService.metadataVaildationEvent($scope.isvalid);
-    });
-
-    $scope.$on("customRequestMetadata", function (event, args) {
-        customMetadataService.setIsvalid($scope.isvalid);
         customMetadataService.setFields($scope.fields);
-        customMetadataService.setFormname($scope.formname);
+        customMetadataService.metadataVaildationEvent($scope.isvalid);
     });
 
 
@@ -29,5 +28,4 @@ uploaderControllers.controller('customMetadataController', function ($scope, dat
     $scope.metadataEditCancelled = function () {
         $modalInstance.dismiss('cancel');
     };
-
 });

@@ -20,7 +20,7 @@ uploaderControllers.controller('disUserController', function ($location, $scope,
             $scope.failedLogins = 0;
             $scope.loggedIn = true;
             //$scope.user = response;
-            $scope.user = $scope.demoUser;
+            $scope.user = $scope.demoUser.username;
             authService.setUserData($scope.demoUser);
             console.info("login successful");
             alertService.clear();
@@ -271,6 +271,13 @@ uploaderControllers.controller('disCategoryController', function ($scope, disser
     }
 
 
+    $scope.refreshCurrentCategory = function refreshCurrentCategory() {
+        if ($scope.currentCategory !== undefined) {
+            $scope.showCategories($scope.currentCategory);
+        }
+    }
+
+
     $scope.showRootCategory = function showRootCategory() {
         $scope.doGetCategories($scope.connection, app.rootCategory, $scope.recursive, true);
         dataService.updateCurrentCategoryEvent(app.rootCategory);
@@ -279,7 +286,7 @@ uploaderControllers.controller('disCategoryController', function ($scope, disser
     $scope.showRootCategory();
 });
 
-uploaderControllers.controller('disFileUploadController', function ($scope, $modal, $q, $fileUploader, disservice, dataService, authService, alertService, customMetadataService) {
+uploaderControllers.controller('disFileUploadController', function ($scope, $rootScope, $modal, $q, $fileUploader, disservice, dataService, authService, alertService, customMetadataService) {
     $scope.uploadMetadata = [];
     $scope.enableMtadata = app.enableMtadata;
     $scope.canUpload = false;
@@ -299,42 +306,36 @@ uploaderControllers.controller('disFileUploadController', function ($scope, $mod
         $scope.setupAlerts();
     });
 
-    // Creates a uploader
+    // Creates an uploader
     var uploader = $scope.uploader = $fileUploader.create({
         scope: $scope,
-        url: app.baseUrl + '/file/' + app.disConnection + '/upload',
-        formData: $scope.uploadMetadata
+        url: app.baseUrl + '/file/' + app.disConnection + '/upload'
     });
 
     $scope.$on("updateCurrentCategory", function (event, args) {
         $scope.uploader.clearQueue();
     });
-    ;
+
+    $scope.startUpload = function startUpload() {
+        $scope.setupUploadMetadata(customMetadataService.getFields());
+        $scope.uploader.uploadAll();
+    }
+
     $scope.setupUploadMetadata = function setupUploadMetadata(fields) {
-        $scope.uploadMetadata = [];
+        $scope.uploadMetadata = {};
         var fvs = _.values(fields);
         for (var i = 0; i < fvs.length; i++) {
             var field = {};
-            field["fulcrum_" + fvs[i].damname] = fvs[i].value;
-            $scope.uploadMetadata.push(field);
+            $scope.uploadMetadata[fvs[i].damname] = fvs[i].value;
         }
         ;
-        var u = authService.getUserData();
-        var uf = {};
-        uf["fulcrum_Uploaded By"] = u.firstname + " " + u.lastname;
-        $scope.uploadMetadata.push(uf);
-        $scope.uploader.formData = $scope.uploadMetadata;
-    };
-
-    $scope.asyncRequestMetadata = function asyncRequestMetadata() {
-        var deferred = $q.defer();
-        customMetadataService.requestMetadatataEvent();
-        setTimeout(function () {
-            $scope.$apply(function () {
-                deferred.resolve(customMetadataService.getFields());
-            });
-        }, 200);
-        return deferred.promise;
+        try {
+            var u = authService.getUserData();
+            $scope.uploadMetadata["Uploaded By"] = u.firstname + " " + u.lastname;
+        } catch (e) {
+            alert("Error: Session terminated, please login again");
+            authService.goToLoginPage();
+        }
     };
 
     // Register handlers
@@ -357,10 +358,6 @@ uploaderControllers.controller('disFileUploadController', function ($scope, $mod
         if (!authService.isSessionAlive()) {
             authService.goToLoginPage();
         }
-        var fds = $scope.asyncRequestMetadata();
-        fds.then(function (fields) {
-            $scope.setupUploadMetadata(fields);
-        });
 
     });
 
@@ -371,8 +368,12 @@ uploaderControllers.controller('disFileUploadController', function ($scope, $mod
     });
 
     uploader.bind('success', function (event, xhr, item, response) {
-        disservice.assignItemToCategory(disservice.connection, response.id, disservice.categoryId);
-        $scope.checkCanUpload();
+        //$scope.checkCanUpload();
+        disservice.postMetadata(disservice.connection, response.id, $scope.uploadMetadata).then(function () {
+            return disservice.assignItemToCategory(disservice.connection, response.id, disservice.categoryId)
+        }).then(function () {
+            dataService.refreshRecentFilesEvent({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
+        });
         console.info('Success', xhr, item, response);
     });
 
@@ -399,7 +400,6 @@ uploaderControllers.controller('disFileUploadController', function ($scope, $mod
     uploader.bind('completeall', function (event, items) {
         $scope.checkCanUpload();
         console.info('Complete all', items);
-        dataService.refreshRecentFilesEvent({categoryId: disservice.categoryId, recursive: true, direction: 'descending'});
     });
 
     $scope.checkCanUpload = function () {

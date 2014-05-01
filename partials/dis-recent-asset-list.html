@@ -13,17 +13,20 @@
                 <table class="table-striped  table-condensed" style="table-layout: fixed; width: 100%;">
                     <thead>
                     <tr>
-                        <th>Preview</th>
-                        <th>Name</th>
-                        <th>Last Modified</th>
+                        <th style="text-align: center;">Preview</th>
+                        <th style="text-align: center;">Name</th>
+                        <th style="text-align: center;">Last Modified</th>
                     </tr>
                     </thead>
                     <tbody>
 
                     <tr ng-repeat="asset in assets.records">
-                        <td ng-click="doPreview(asset)"><img src="{{asset.preview_very_small}}"/></td>
+                        <td ng-click="doPreview(asset)">
+                            <img src="{{asset.preview_very_small}}"
+                                 class="img-responsive center-block"
+                                 tooltip="Click for details"/></td>
                         <td style="overflow:hidden;width: 150px">{{asset.Record_Name}}</td>
-                        <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:MM:ss'}}</td>
+                        <td>{{asset.Asset_Modification_Date | date:'dd-MM-yy HH:mm:ss'}}</td>
                     </tr>
                     </tbody>
                 </table>

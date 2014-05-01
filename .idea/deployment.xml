@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="local_xampp">
+  <component name="PublishConfigData" autoUpload="Always" serverName="local_xampp_uploader">
     <serverData>
-      <paths name="local_tomcat">
+      <paths name="local_xampp_berlinirish">
         <serverdata>
           <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$/../berlinirish" web="/" />
           </mappings>
         </serverdata>
       </paths>
-      <paths name="local_xampp">
+      <paths name="local_xampp_uploader">
         <serverdata>
           <mappings>
             <mapping deploy="/" local="$PROJECT_DIR$" web="/" />

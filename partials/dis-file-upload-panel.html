@@ -24,8 +24,8 @@
                             <alert ng-repeat="alert in uploadAlerts" type="alert.type">{{alert.msg}}</alert>
                         </span>
                     </div>
-                    <div ng-show="canUpload" style="margin-bottom:4px">
-                        <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()"
+                    <div style="margin-bottom:4px" class="btn-group-sm">
+                        <button type="button" class="btn btn-success btn-s" ng-click="startUpload()"
                                 ng-disabled="!canUpload">
                             <span class="glyphicon glyphicon-upload"></span> Start Upload
                         </button>
@@ -33,8 +33,8 @@
                 </div>
             </div>
 
-            <div class="col-md-7">
-                <dis-metadata-edit-panel ng-controller="customMetadataController"/>
+            <div class="col-md-7 btn-group-sm" ng-controller="customMetadataController" ng-show="true">
+                <dis-metadata-edit-panel/>
             </div>
         </div>
 
@@ -98,8 +98,8 @@
             </div>
         </div>
         <div class="row" style="margin:6px;padding-bottom:4px" ng-show="uploader.queue.length">
-            <div>
-                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()"
+            <div class="btn-group-sm">
+                <button type="button" class="btn btn-success btn-s" ng-click="startUpload()"
                         ng-disabled="!canUpload">
                     <span class="glyphicon glyphicon-upload"></span> Upload all
                 </button>

@@ -3,8 +3,8 @@
         <div class="panel  panel-primary">
             <div class="panel-heading"><h3 class="panel-title">Metadata</h3></div>
             <div class="panel-body">
-                <form name={{formname}} class="form-horizontal" novalidate>
-                    <div class="form-group has-feedback"
+                <form name="{{formname}}" class="form-horizontal" novalidate>
+                    <div class="form-group row has-feedback"
                          ng-class="{
                                  'has-error' : {{formname}}.caption.$invalid ,
                                  'has-success' :  {{formname}}.caption.$valid
@@ -26,7 +26,7 @@
                                 {{fields.caption.errortext}}</p>
                         </div>
                     </div>
-                    <div class="form-group has-feedback"
+                    <div class="form-group row has-feedback"
                          ng-class="{ 'has-error' : {{formname}}.notes.$invalid, 'has-success' : {{formname}}.notes.$valid }">
                         <label for="notesid" class="control-label col-sm-3">{{fields.notes.displayname}}</label>
 
@@ -34,7 +34,8 @@
                             <textarea name="notes" class="form-control" id="notesid" rows="3"
                                       ng-model="fields.notes.value"
                                       placeholder="{{fields.otes.helptext}}"
-                                      ng-maxlength="{{fields.notes.maxlength}}"/>
+                                      ng-maxlength="{{fields.notes.maxlength}}"
+                                      style="resize:vertical;"/>
                                 <span class="glyphicon form-control-feedback" ng-show="true"
                                       ng-class="{ 'glyphicon-remove' : {{formname}}.notes.$invalid, 'glyphicon-ok' : {{formname}}.notes.$valid }">
                                 </span>

@@ -1,4 +1,4 @@
-(function(){
+(function () {
 
     var app = angular.module('disBrowser', ['angularFileUpload', 'ui.bootstrap', 'ngCookies', 'ngRoute', 'ivpusic.cookie',
         'uploaderControllers']);
@@ -27,7 +27,7 @@
                 });
         }]);
 
-    app.baseUrl = "http://dis.berlinirish.com/";
+    app.baseUrl = "http://dis.berlinirish.com";
     app.disConnection = "sample-2";
     app.disView = "overview";
     app.rootCategory = { id: 1, path: "$Categories"};
