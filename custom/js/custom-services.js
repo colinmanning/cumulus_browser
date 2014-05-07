@@ -56,5 +56,31 @@ app.factory('customMetadataService', function ($rootScope) {
         errortext: "Notes cannot have more than 20 characters "
     };
 
+    fields.uploaded_by = {
+        value: "",
+        displayname: "Uploaded By",
+        damname: "Uploaded By",
+        helptext: "",
+        errortext: ""
+    };
+
+    fields.created_at = {
+        value: "",
+        displayname: "Created at",
+        damname: "Asset Creation Date",
+        helptext: "",
+        errortext: ""
+    };
+
+    fields.modified_at = {
+        value: "",
+        displayname: "Last modified at",
+        damname: "Asset Modification Date",
+        helptext: "",
+        errortext: ""
+    }
+    ;
+
+
     return metadataService;
 });

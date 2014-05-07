@@ -4,30 +4,23 @@
          style="margin-top:10px;margin-bottom:10px">
         <div ng-controller="disUserController">
                 <span class="h4 small" style="margin-left:6px;margin-right:6px;">
-                    Logged in as: {{demoUser.firstname}} {{demoUser.lastname}}
+                    <span translate="LOGGED_IN_AS"/> {{user.firstName}} {{user.lastName}}
                 </span>
-            <button class="btn btn-primary" ng-click="doLogout()">Logout</button>
+            <button class="btn btn-primary btn-sm" ng-click="doLogout()"><span translate="LOGOUT"/></button>
         </div>
         <div class="row"
              style="margin-top:10px;margin-bottom:10px">
-            <div class="col-md-2" style="margin-bottom: 20px">
+            <div class="col-md-3" style="margin-bottom: 20px">
                 <div ng-controller="disCategoryController">
                     <dis-category-panel/>
                 </div>
             </div>
-            <div class="col-md-6" style="margin-bottom: 20px">
-                <div class="panel panel-info">
-                    <div class="panel-heading"><h3 class="panel-title">File Uploader</h3></div>
-                    <div class="panel-body">
-                        <div ng-controller="disFileUploadController as file_upload">
-                            <dis-file-upload-panel/>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-md-7" style="margin-bottom: 20px">
+                <dis-file-upload-panel/>
             </div>
-            <div class="col-md-4" style="margin-bottom: 20px" ng-show="true">
+            <div class="col-md-2" style="margin-bottom: 20px" ng-show="true">
                 <div ng-controller="disRecentAssetsController">
-                <dis-recent-asset-list/>
+                    <dis-recent-asset-list/>
                 </div>
             </div>
         </div>

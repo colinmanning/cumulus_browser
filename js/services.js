@@ -9,10 +9,24 @@ app.factory('disservice', function ($http) {
     disAPI.categoryId;
     disAPI.connection;
 
+    disAPI.describe = function (connection) {
+        return $http({
+            method: 'JSONP',
+            url: app.baseUrl + '/admin/' + connection + '/describe?callback=JSON_CALLBACK'
+        });
+    };
+
     disAPI.textSearch = function (connection, view, text, pageNumber, pageSize) {
         return $http({
             method: 'JSONP',
             url: app.baseUrl + '/search/' + connection + '/fulltext?callback=JSON_CALLBACK&view=' + view + '&text=' + text + '&page=' + pageNumber + '&pageSize=' + pageSize
+        });
+    };
+
+    disAPI.textSearchCategory = function (connection, view, text, pageNumber, pageSize) {
+        return $http({
+            method: 'JSONP',
+            url: app.baseUrl + '/search/' + connection + '/categoryfulltext?callback=JSON_CALLBACK&view=' + view + '&text=' + text + '&page=' + pageNumber + '&pageSize=' + pageSize
         });
     };
 
@@ -50,24 +64,18 @@ app.factory('disservice', function ($http) {
 
     disAPI.validateUser = function (connection, u, p) {
         //mock testing function
-        var demoUser = {
-            username: "demo53",
-            firstname: "Demo",
-            lastname: "User",
-            email: "colin@printoutsource.com"
-        }
-        if (u = 'demo53' && p == 'demo13') {
-            return $http({
-                method: 'get',
-                url: app.baseUrl
-            });
-        } else {
-            return $http({
-                method: 'JSONP',
-                url: app.baseUrl
-            });
-        }
 
+        if (!u || !p) {
+            u = "sddcssccsssddsd";
+            p = "1212wekwkncekcmoevve"
+        }
+        ;
+
+        var theUrl = app.baseUrl + "/admin/" + connection + "/getuser?s=" + u + "&g=" + p + "&callback=JSON_CALLBACK";
+        return $http({
+            method: 'JSONP',
+            url: theUrl
+        });
     };
 
 
@@ -139,10 +147,19 @@ app.factory('authService', function ($rootScope, ipCookie) {
     var authService = {};
 
     authService.user;
-    authService.userData;
+    authService.userData
+    authService.lang = app.lang;
 
     authService.isSessionAlive = function () {
         return  ipCookie(app.authCookieName);
+    };
+
+    authService.setLang = function (lang) {
+        authService.lang = lang;
+    };
+
+    authService.getLang = function () {
+        return authService.lang;
     };
 
     authService.setSession = function (duration, user) {
@@ -156,9 +173,9 @@ app.factory('authService', function ($rootScope, ipCookie) {
 
     authService.goToLoginPage = function () {
         if (authService.user != undefined) {
-            window.location = "#/login/" + authService.user;
+            window.location = "#/" + authService.lang + "/login/" + authService.user;
         } else {
-            window.location = "#/login/";
+            window.location = "#/" + authService.lang + "/login/";
         }
     }
 

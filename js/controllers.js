@@ -2,39 +2,60 @@
 
 var uploaderControllers = angular.module('uploaderControllers', []);
 
-uploaderControllers.controller('disUserController', function ($location, $scope, disservice, alertService, $cookies, $routeParams, authService) {
+uploaderControllers.controller('disUserController', function ($translate, $location, $scope, disservice, alertService, $cookies, $routeParams, authService) {
     $scope.cumulusUser = $routeParams.cu;
-    $scope.user = {};
-    $scope.failedLogins = 0;
-    $scope.demoUser = {
-        username: "demo53",
-        firstname: "Demo",
-        lastname: "User",
-        email: "colin@printoutsource.com"
+    if ($routeParams.lang) {
+        $scope.lang = $routeParams.lang;
+        authService.setLang($scope.lang);
     }
-    //$scope.loggedIn = false;
+    $scope.user = authService.getUserData();
+    $scope.failedLogins = 0;
+
+    $scope.connection = app.disConnection;
+
+    $translate.use($scope.lang);
+    $translate('USER_NOT_ACTIVE').then(function (message) {
+        $scope.messageUserNotActive = message;
+    });
+
 
     $scope.doValidateUser = function doValidateUser(password) {
 
-        disservice.validateUser(this.connection, $scope.cumulusUser, password).success(function (response) {
-            $scope.failedLogins = 0;
+        disservice.validateUser($scope.connection, $scope.cumulusUser, password).success(function (response) {
             $scope.loggedIn = true;
-            //$scope.user = response;
-            $scope.user = $scope.demoUser.username;
-            authService.setUserData($scope.demoUser);
-            console.info("login successful");
-            alertService.clear();
-            authService.setSession(app.sessionDuration, $scope.cumulusUser);
-            window.location = "#/upload";
+            $scope.user = response;
+            if ($scope.user.loginActive) {
+                authService.setUserData($scope.user);
+                console.info("login successful");
+                alertService.clear();
+                authService.setSession(app.sessionDuration, $scope.cumulusUser);
+                window.location = "#/" + $scope.lang + "/upload";
+            } else {
+                $scope.failedLogins += 1;
+                $scope.user = {};
+                $scope.loggedIn = false;
+                console.info("User '" + $scope.cumulusUser + "' is not active");
+
+                authService.logout();
+                alertService.clear();
+                alertService.add('warning', $scope.messageUserNotActive);
+                $translate('FAILED_LOGIN_ATTEMPTS', { count: $scope.failedLogins}).then(function (message) {
+                    alertService.add('danger', message);
+                });
+                authService.goToLoginPage();
+
+            }
         }).error(function (response) {
             $scope.failedLogins += 1;
-            $scope.user = {};
+            $scope.user = false;
             $scope.loggedIn = false;
             console.info("login failed");
 
             authService.logout();
             alertService.clear();
-            alertService.add('danger', 'Failed login attempts: ' + $scope.failedLogins);
+            $translate('FAILED_LOGIN_ATTEMPTS', { count: $scope.failedLogins}).then(function (message) {
+                alertService.add('danger', message);
+            });
             authService.goToLoginPage();
         });
     }
@@ -80,7 +101,7 @@ uploaderControllers.controller('disAssetsController', function ($scope, $modal, 
     $scope.pageSize = 10;
 
     this.doTextSearch = function doTextSearch() {
-        disservice.textSearch(this.connection, this.view, this.searchText, $scope.currentPage, $scope.pageSize).success(function (response) {
+        disservice.textSearch($scope.connection, this.view, this.searchText, $scope.currentPage, $scope.pageSize).success(function (response) {
             $scope.assets = response;
             $scope.totalItems = $scope.assets.total;
             $scope.showPager = $scope.totalItems > $scope.pageSize;
@@ -104,7 +125,7 @@ uploaderControllers.controller('disAssetsController', function ($scope, $modal, 
 
 });
 
-uploaderControllers.controller('disRecentAssetsController', function ($scope, $modal, $interval, disservice) {
+uploaderControllers.controller('disRecentAssetsController', function ($translate, $scope, $modal, $interval, disservice) {
     $scope.assets = {};
     $scope.connection = app.disConnection;
     $scope.view = app.disView;
@@ -148,7 +169,7 @@ uploaderControllers.controller('disRecentAssetsController', function ($scope, $m
     $scope.doPreview = function doPreview(asset) {
         $scope.currentAsset = asset;
         var previewModalInstance = $modal.open({
-            templateUrl: 'partials/dis-asset-preview.html',
+            templateUrl: 'custom/partials/custom-asset-preview.html',
             controller: 'disPreviewInstanceController',
             resolve: {
                 asset: function () {
@@ -200,7 +221,7 @@ uploaderControllers.controller('disRecentAssetsController', function ($scope, $m
 });
 
 
-uploaderControllers.controller('disPreviewInstanceController', function ($scope, $modalInstance, asset) {
+uploaderControllers.controller('disPreviewInstanceController', function ($translate, $scope, $modalInstance, asset) {
 
     $scope.asset = asset;
 
@@ -213,7 +234,7 @@ uploaderControllers.controller('disPreviewInstanceController', function ($scope,
     };
 });
 
-uploaderControllers.controller('disCategoryBreadcrumbsController', function ($scope, disservice, dataService) {
+uploaderControllers.controller('disCategoryBreadcrumbsController', function ($translate, $scope, disservice, dataService) {
     $scope.currentCategory = app.rootCategory;
 
     $scope.$on("updateCurrentCategory", function (event, args) {
@@ -221,7 +242,7 @@ uploaderControllers.controller('disCategoryBreadcrumbsController', function ($sc
     });
 });
 
-uploaderControllers.controller('disCategoryController', function ($scope, disservice, dataService, authService) {
+uploaderControllers.controller('disCategoryController', function ($translate, $scope, disservice, dataService, authService) {
     $scope.category = {};
     $scope.recursive = false;
 
@@ -286,17 +307,21 @@ uploaderControllers.controller('disCategoryController', function ($scope, disser
     $scope.showRootCategory();
 });
 
-uploaderControllers.controller('disFileUploadController', function ($scope, $rootScope, $modal, $q, $fileUploader, disservice, dataService, authService, alertService, customMetadataService) {
+uploaderControllers.controller('disFileUploadController', function ($translate, $scope, $rootScope, $modal, $q, $fileUploader, disservice, dataService, authService, alertService, customMetadataService) {
     $scope.uploadMetadata = [];
     $scope.enableMtadata = app.enableMtadata;
     $scope.canUpload = false;
     $scope.metadataIsValid = customMetadataService.getIsvalid();
 
+    $translate('ERROR_INVALID_METADATA').then(function (value) {
+        $scope.error_invalid_metadata = value;
+    });
+
 
     $scope.setupAlerts = function setupAlerts() {
         alertService.clearUploadAlerts();
         if (!$scope.metadataIsValid) {
-            alertService.addUploadAlert('danger', app.error_invalidMetadata);
+            alertService.addUploadAlert('danger', $scope.error_invalid_metadata);
         }
         $scope.checkCanUpload();
     }
@@ -331,7 +356,8 @@ uploaderControllers.controller('disFileUploadController', function ($scope, $roo
         ;
         try {
             var u = authService.getUserData();
-            $scope.uploadMetadata["Uploaded By"] = u.firstname + " " + u.lastname;
+            //$scope.uploadMetadata["Uploaded By"] = u.firstName + " " + u.lastName;
+            $scope.uploadMetadata["Uploaded By"] = u.username;
         } catch (e) {
             alert("Error: Session terminated, please login again");
             authService.goToLoginPage();
@@ -346,6 +372,7 @@ uploaderControllers.controller('disFileUploadController', function ($scope, $roo
 
     uploader.bind('whenaddingfilefailed', function (event, item) {
         //console.info('When adding a file failed', item);
+        $scope.checkCanUpload();
     });
 
     uploader.bind('afteraddingall', function (event, items) {

@@ -1,34 +1,31 @@
-<div class="container" style="width:300px;margin-top:20px;margin-left:20px;">
+<div class="container" style="width:370px;margin-top:20px;margin-left:20px;">
     <div class="panel panel-info">
-        <div class="panel-heading"><h3 class="panel-title">Cumulus Uploader Login</h3></div>
-        <div class="panel-body">
-            <div ng-controller="disUserController">
-                <form class="form-horizontal" role="form">
-                    <div class="form-group">
+        <div class="panel-heading"><h3 class="panel-title" translate="LOGIN_TITLE"></h3></div>
+        <div class="panel-body" ng-controller="disUserController" style="padding:10px;">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
 
-                        <div class="col-sm-12">
-                            <input type="text" name="cumulusUser" ng-model="cumulusUser" value="{{cumulusUser}}"
-                                   class="form-control" id="inputUsername" placeholder="Enter username">
-                        </div>
+                    <div class="col-sm-12">
+                        <input type="text" name="cumulusUser" ng-model="cumulusUser" value="{{cumulusUser}}"
+                               class="form-control" id="inputUsername" placeholder="{{ 'ENTER_USERNAME' | translate}}">
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-8">
-                            <input type="password" name="cumulusPassword" ng-model="cumulusPassword"
-                                   value="{{cumulusPassword}}" class="form-control" id="inputPassword"
-                                   placeholder="Enter password">
-                        </div>
-                        <div class="col-sm-2">
-                            <button type="submit" class="btn btn-primary" ng-click="doValidateUser(cumulusPassword)">
-                                Sign in
-                            </button>
-                        </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8">
+                        <input type="password" name="cumulusPassword" ng-model="cumulusPassword"
+                               value="{{cumulusPassword}}" class="form-control" id="inputPassword"
+                               placeholder="{{ 'ENTER_PASSWORD' | translate}}">
                     </div>
-                </form>
-            </div>
-
-            <div ng-controller="alertController">
-                <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-            </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-primary btn-sm" ng-click="doValidateUser(cumulusPassword)">
+                            <span translate="SIGN_IN"/>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div ng-controller="alertController" style="padding:10px;">
+            <alert ng-repeat="alert in alerts" type="alert.type">{{alert.msg}}</alert>
         </div>
     </div>
 </div>

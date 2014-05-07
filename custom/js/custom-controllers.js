@@ -2,7 +2,7 @@
 
 var uploaderControllers = angular.module('uploaderControllers');
 
-uploaderControllers.controller('customMetadataController', function ($scope, dataService, customMetadataService) {
+uploaderControllers.controller('customMetadataController', function ($translate, $scope, dataService, customMetadataService) {
 
     $scope.fields = customMetadataService.getFields();
     $scope.formname = customMetadataService.getFormname();
