@@ -1,0 +1,44 @@
+<div ng-controller="authController"/>
+<div class="container-fluid" style="margin:10px;">
+    <div class="row"
+         style="margin-top:10px;margin-bottom:10px">
+        <div ng-controller="disUserController">
+                <span class="h4 small" style="margin-left:6px;margin-right:6px;">
+                    <span translate="LOGGED_IN_AS"/> {{user.firstName}} {{user.lastName}}
+                </span>
+            <button class="btn btn-primary btn-sm" ng-click="doLogout()"><span translate="LOGOUT"/></button>
+            <button ng-show="isUploaderEnabled()" class="btn btn-primary btn-sm" ng-click="doGotoUploader()"><span
+                    translate="UPLOADER"/></button>
+        </div>
+        <div class="row" style="margin-top:10px;margin-bottom:10px">
+            <div style="margin-bottom: 10px">
+                <div class="col-md-8" ng-controller="customSearchController">
+
+                    <input type="text" name="searchText"
+                           class="form-control" id="inputSearchText"
+                           ng-model="searchtext"
+                           dis-key-enter="doSearch()"
+                           placeholder="{{ 'SEARCH' | translate}}"/>
+                </div>
+            </div>
+
+        </div>
+        <div class="row" style="margin-top:10px;margin-bottom:10px">
+            <div class="col-md-3" style="margin-bottom: 20px">
+                <div ng-controller="disCategoryController">
+                    <dis-advanced-category-panel/>
+                </div>
+            </div>
+            <div class="col-md-5" style="margin-bottom: 20px" ng-show="true">
+                <div ng-controller="customAssetListController">
+                    <custom-asset-list/>
+                </div>
+            </div>
+            <div class="col-md-4" style="margin-bottom: 20px">
+                <div ng-controller="customAssetController">
+                    <custom-asset-view/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

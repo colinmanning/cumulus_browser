@@ -7,6 +7,8 @@
                     <span translate="LOGGED_IN_AS"/> {{user.firstName}} {{user.lastName}}
                 </span>
             <button class="btn btn-primary btn-sm" ng-click="doLogout()"><span translate="LOGOUT"/></button>
+            <button ng-show="isBrowserEnabled()" class="btn btn-primary btn-sm" ng-click="doGotoBrowser()"><span
+                    translate="BROWSER"/></button>
         </div>
         <div class="row"
              style="margin-top:10px;margin-bottom:10px">

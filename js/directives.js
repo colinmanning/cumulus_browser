@@ -16,6 +16,16 @@ app.directive('disCategoryPanel', function () {
     }
 )
 
+app.directive('disAdvancedCategoryPanel', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'partials/dis-advanced-category-panel.html',
+            transclude: true
+        }
+    }
+)
+
+
 app.directive('disCategoryBreadcrumbs', function () {
         return {
             restrict: 'E',

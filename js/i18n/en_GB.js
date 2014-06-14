@@ -35,5 +35,10 @@ var translations_en_GB = {
     GOTO_PARENT_CATEGORY: "Go to parent category",
     REFRESH_CURRENT_CATEGORY: "Refresh current category",
     USER_NOT_ACTIVE: "User not active",
-    FAILED_LOGIN_ATTEMPTS: "Failed login attempts: {{count}}"
+    FAILED_LOGIN_ATTEMPTS: "Failed login attempts: {{count}}",
+    ASSETS: "Assets",
+    ASSET_DETAILS: "Asset Details",
+    REFRESH: "Refresh",
+    UPLOADER: "Uploader",
+    BROWSER: "Browser"
 }

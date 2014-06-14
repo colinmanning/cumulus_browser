@@ -1,4 +1,4 @@
-<div class="container" style="width:370px;margin-top:20px;margin-left:20px;">
+<div class="container" style="width:500px;margin-top:20px;margin-left:20px;">
     <div class="panel panel-info">
         <div class="panel-heading"><h3 class="panel-title" translate="LOGIN_TITLE"></h3></div>
         <div class="panel-body" ng-controller="disUserController" style="padding:10px;">
@@ -17,7 +17,8 @@
                                placeholder="{{ 'ENTER_PASSWORD' | translate}}">
                     </div>
                     <div class="col-sm-2">
-                        <button type="submit" class="btn btn-primary btn-sm" ng-click="doValidateUser(cumulusPassword)">
+                        <button type="submit" class="btn btn-primary btn-sm"
+                                ng-click="doTestingValidateUser(cumulusPassword)">
                             <span translate="SIGN_IN"/>
                         </button>
                     </div>
@@ -28,4 +29,24 @@
             <alert ng-repeat="alert in alerts" type="alert.type">{{alert.msg}}</alert>
         </div>
     </div>
+    <!--
+    <div class="panel panel-info">
+        <div class="panel-heading"><h3 class="panel-title">Map Demo</h3></div>
+        <div class="panel-body" ng-controller="disUserController" style="padding:10px;">
+            <google-map center='{latitude:52.46, longitude:13.33}'
+                        zoom=14
+                        draggable="true"
+                        pan="true"s>
+                <marker coords='{latitude:52.46, longitude:13.33}'>
+                    <window ng-cloak show="true">
+                        <div style="padding:4px">
+                            <img src="http://dis.printoutsource.com/ulsa/preview/point-ulsa/fetch?id=1128&name=small"
+                                 class="img-responsive center-block"/>
+                        </div>
+                    </window>
+                </marker>
+            </google-map>
+        </div>
+    </div>
+    -->
 </div>

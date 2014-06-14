@@ -1,0 +1,53 @@
+<div ng-controller="customMetadataController">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <span class="h3 panel-title" translate="ASSET_DETAILS"/>
+        <span style="margin-left:10px">
+                <button class="btn btn-primary btn-sm" ng-click="doFetch()" ng-show="true">
+                    <span class="glyphicon glyphicon-refresh" tooltip="{{ 'REFRESH' | translate}}"></span>
+                </button>
+        </span>
+        </div>
+        <div class="panel-body">
+            <div class="container-fluid" ng-if="hasAsset">
+                <div class="row">
+                    <div class="panel panel-info" style="padding:16px" ng-if="!currentAsset.location">
+                        <img src="{{currentAsset.preview_medium}}" class="img-responsive center-block">
+                    </div>
+                    <div ng-if="currentAsset.location">
+                        <google-map center='currentAsset.location'
+                                    zoom=14
+                                    draggable="true"
+                                    pan="true">
+                            <marker coords='currentAsset.location'>
+                                <window ng-cloak show="true">
+                                    <div style="padding:4px">
+                                        <img src="{{currentAsset.preview_small}}" class="img-responsive center-block"/>
+                                    </div>
+                                </window>
+                            </marker>
+                        </google-map>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"><span translate="ID"/>:</div>
+                    <div class="col-md-8">{{currentAsset.ID}}</div>
+                    <div class="col-md-4"><span translate="NAME"/>:</div>
+                    <div class="col-md-8">{{currentAsset.Record_Name | checkforempty}}</div>
+                    <div class="col-md-4">{{fields.caption.displayname}}:</div>
+                    <div class="col-md-8">{{currentAsset.Caption | checkforempty}}:</div>
+                    <div class="col-md-4">{{fields.uploaded_by.displayname}}:</div>
+                    <div class="col-md-8">{{currentAsset.Uploaded_By | checkforempty}}</div>
+                    <div class="col-md-4">{{fields.created_at.displayname}}:</div>
+                    <div class="col-md-8"> {{currentAsset.Asset_Creation_Date | date:'dd-MM-yy HH:mm:ss'}}</div>
+                    <div class="col-md-4">{{fields.modified_at.displayname}}:</div>
+                    <div class="col-md-8"> {{currentAsset.Asset_Modification_Date | date:'dd-MM-yy HH:mm:ss'}}</div>
+                    <div class="col-md-4">{{fields.latitude.displayname}}:</div>
+                    <div class="col-md-8">{{currentAsset.Latitude | checkforempty}}</div>
+                    <div class="col-md-4">{{fields.longitude.displayname}}:</div>
+                    <div class="col-md-8">{{currentAsset.Longitude | checkforempty}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

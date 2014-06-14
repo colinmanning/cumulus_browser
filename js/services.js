@@ -8,6 +8,20 @@ app.factory('disservice', function ($http) {
 
     disAPI.categoryId;
     disAPI.connection;
+    disAPI.collections = {}
+
+    disAPI.getCollection = function (name) {
+        return disApi.collections[name];
+    }
+
+    disAPI.setCollection = function (name, collection) {
+        disApi.collections[name] = collection;
+    }
+
+    disAPI.getCollectionObjects = function (name, ids) {
+        var result = {};
+        return result;
+    }
 
     disAPI.describe = function (connection) {
         return $http({
@@ -43,6 +57,13 @@ app.factory('disservice', function ($http) {
         return $http({
             method: 'GET',
             url: app.baseUrl + '/data/' + connection + '/addrecordtocategory?callback=JSON_CALLBACK&recordid=' + itemId + '&categoryid=' + categoryId
+        });
+    }
+
+    disAPI.getAssetsInCategory = function (connection, view, categoryId, recursive, direction, offset, count) {
+        return $http({
+            method: 'JSONP',
+            url: app.baseUrl + '/search/' + connection + '/categoryquery?callback=JSON_CALLBACK&id=' + categoryId + '&recursive=' + recursive + '&view=' + view + '&offset=' + offset + '&count=' + count + '&sort=Asset Creation Date&direction=' + direction
         });
     }
 
@@ -142,7 +163,7 @@ app.factory('alertService', function ($rootScope) {
 
 });
 
-app.factory('authService', function ($rootScope, ipCookie) {
+app.factory('authService', function ($rootScope, ipCookie, $window) {
 
     var authService = {};
 
@@ -173,9 +194,9 @@ app.factory('authService', function ($rootScope, ipCookie) {
 
     authService.goToLoginPage = function () {
         if (authService.user != undefined) {
-            window.location = "#/" + authService.lang + "/login/" + authService.user;
+            $window.location = "#/" + authService.lang + "/login/" + authService.user;
         } else {
-            window.location = "#/" + authService.lang + "/login/";
+            $window.location = "#/" + authService.lang + "/login/";
         }
     }
 
@@ -188,6 +209,27 @@ app.factory('authService', function ($rootScope, ipCookie) {
     }
 
     return authService;
+
+});
+
+app.factory('uiService', function ($rootScope) {
+
+    var uiService = {};
+
+    uiService.EVENT_CURRENT_ASSET_CHANGED = "currentAssetChanged";
+
+    uiService.currentAsset = false;
+
+    uiService.setCurrentAsset = function (currentAsset) {
+        uiService.currentAsset = currentAsset;
+        $rootScope.$broadcast(uiService.EVENT_CURRENT_ASSET_CHANGED, currentAsset);
+    };
+
+    uiService.getCurrentAsset = function () {
+        return uiService.currentAsset;
+    };
+
+    return uiService;
 
 });
 

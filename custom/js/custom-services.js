@@ -47,6 +47,7 @@ app.factory('customMetadataService', function ($rootScope) {
         helptext: "Enter caption",
         errortext: "Caption must be at least 3 characters"
     };
+
     fields.notes = {
         value: "",
         displayname: "Notes",
@@ -66,7 +67,7 @@ app.factory('customMetadataService', function ($rootScope) {
 
     fields.created_at = {
         value: "",
-        displayname: "Created at",
+        displayname: "Created",
         damname: "Asset Creation Date",
         helptext: "",
         errortext: ""
@@ -74,12 +75,27 @@ app.factory('customMetadataService', function ($rootScope) {
 
     fields.modified_at = {
         value: "",
-        displayname: "Last modified at",
+        displayname: "Modified",
         damname: "Asset Modification Date",
         helptext: "",
         errortext: ""
-    }
-    ;
+    };
+
+    fields.latitude = {
+        value: "",
+        displayname: "Latitude",
+        damname: "Latitude",
+        helptext: "",
+        errortext: ""
+    };
+
+    fields.longitude = {
+        value: "",
+        displayname: "Longitude",
+        damname: "Longitude",
+        helptext: "",
+        errortext: ""
+    };
 
 
     return metadataService;

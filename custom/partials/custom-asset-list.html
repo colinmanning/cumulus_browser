@@ -13,7 +13,7 @@
                 <table class="table-responsive table-striped  table-condensed" style="table-layout: fixed; width: 100%">
                     <tr ng-repeat="asset in assets.records">
                         <td>
-                            <div class="col-md-4" ng-click="doPreview(asset)">
+                            <div class="col-md-4" ng-click="doSetAsset(asset)">
                                 <div class="panel panel-info" style="padding:6px">
                                     <img src="{{asset.preview_very_small}}"
                                          class="img-responsive center-block"

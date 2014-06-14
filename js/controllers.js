@@ -2,69 +2,105 @@
 
 var uploaderControllers = angular.module('uploaderControllers', []);
 
-uploaderControllers.controller('disUserController', function ($translate, $location, $scope, disservice, alertService, $cookies, $routeParams, authService) {
-    $scope.cumulusUser = $routeParams.cu;
-    if ($routeParams.lang) {
-        $scope.lang = $routeParams.lang;
-        authService.setLang($scope.lang);
-    }
-    $scope.user = authService.getUserData();
-    $scope.failedLogins = 0;
+uploaderControllers.controller('disUserController',
+    function ($window, $translate, $location, $scope, disservice, alertService, $cookies, $routeParams, authService) {
 
-    $scope.connection = app.disConnection;
+        $scope.cumulusUser = $routeParams.cu;
+        if ($routeParams.lang) {
+            $scope.lang = $routeParams.lang;
+            authService.setLang($scope.lang);
+        }
+        $scope.user = authService.getUserData();
+        $scope.failedLogins = 0;
 
-    $translate.use($scope.lang);
-    $translate('USER_NOT_ACTIVE').then(function (message) {
-        $scope.messageUserNotActive = message;
-    });
+        $scope.connection = app.disConnection;
 
+        $translate.use($scope.lang);
+        $translate('USER_NOT_ACTIVE').then(function (message) {
+            $scope.messageUserNotActive = message;
+        });
 
-    $scope.doValidateUser = function doValidateUser(password) {
+        $scope.isUploaderEnabled = function () {
+            return  app.uploaderEnabled;
+        };
 
-        disservice.validateUser($scope.connection, $scope.cumulusUser, password).success(function (response) {
-            $scope.loggedIn = true;
-            $scope.user = response;
-            if ($scope.user.loginActive) {
-                authService.setUserData($scope.user);
-                console.info("login successful");
-                alertService.clear();
-                authService.setSession(app.sessionDuration, $scope.cumulusUser);
-                window.location = "#/" + $scope.lang + "/upload";
-            } else {
+        $scope.isBrowserEnabled = function () {
+            return  app.browserEnabled;
+        };
+
+        $scope.doTestingValidateUser = function doTestingValidateUser(password) {
+            $scope.user = {
+                loginActive: true,
+                firstName: "Colin",
+                lastName: "Manning"
+            };
+
+            authService.setUserData($scope.user);
+            console.info("login successful");
+            alertService.clear();
+            authService.setSession(app.sessionDuration, $scope.cumulusUser);
+            authService.setSession(app.sessionDuration, $scope.cumulusUser);
+            //$window.location = "#/" + $scope.lang + "/upload";
+            $window.location = "#/" + $scope.lang + "/" + app.homePage;
+
+        }
+
+        $scope.doValidateUser = function doValidateUser(password) {
+
+            disservice.validateUser($scope.connection, $scope.cumulusUser, password).success(function (response) {
+                $scope.loggedIn = true;
+                $scope.user = response;
+                if ($scope.user.loginActive) {
+                    authService.setUserData($scope.user);
+                    console.info("login successful");
+                    alertService.clear();
+                    authService.setSession(app.sessionDuration, $scope.cumulusUser);
+                    authService.setSession(app.sessionDuration, $scope.cumulusUser);
+                    //$window.location = "#/" + $scope.lang + "/upload";
+                    $window.location = "#/" + $scope.lang + "/" + app.homePage;
+                } else {
+                    $scope.failedLogins += 1;
+                    $scope.user = {};
+                    $scope.loggedIn = false;
+                    console.info("User '" + $scope.cumulusUser + "' is not active");
+
+                    authService.logout();
+                    alertService.clear();
+                    alertService.add('warning', $scope.messageUserNotActive);
+                    $translate('FAILED_LOGIN_ATTEMPTS', { count: $scope.failedLogins}).then(function (message) {
+                        alertService.add('danger', message);
+                    });
+                    authService.goToLoginPage();
+
+                }
+            }).error(function (response) {
                 $scope.failedLogins += 1;
-                $scope.user = {};
+                $scope.user = false;
                 $scope.loggedIn = false;
-                console.info("User '" + $scope.cumulusUser + "' is not active");
+                console.info("login failed");
 
                 authService.logout();
                 alertService.clear();
-                alertService.add('warning', $scope.messageUserNotActive);
                 $translate('FAILED_LOGIN_ATTEMPTS', { count: $scope.failedLogins}).then(function (message) {
                     alertService.add('danger', message);
                 });
                 authService.goToLoginPage();
-
-            }
-        }).error(function (response) {
-            $scope.failedLogins += 1;
-            $scope.user = false;
-            $scope.loggedIn = false;
-            console.info("login failed");
-
-            authService.logout();
-            alertService.clear();
-            $translate('FAILED_LOGIN_ATTEMPTS', { count: $scope.failedLogins}).then(function (message) {
-                alertService.add('danger', message);
             });
-            authService.goToLoginPage();
-        });
-    }
+        }
 
-    $scope.doLogout = function doLogout() {
-        authService.logout();
-        authService.goToLoginPage();
-    }
-});
+        $scope.doGotoUploader = function doGotoUploader() {
+            $window.location = "#/" + $scope.lang + "/upload";
+        }
+
+        $scope.doGotoBrowser = function doGotoUploader() {
+            $window.location = "#/" + $scope.lang + "/browser";
+        }
+
+        $scope.doLogout = function doLogout() {
+            authService.logout();
+            authService.goToLoginPage();
+        }
+    });
 
 uploaderControllers.controller('authController', function ($scope, authService) {
     if (!authService.isSessionAlive()) {
@@ -89,9 +125,7 @@ uploaderControllers.controller('uploadAlertController', function ($scope, alertS
 
 uploaderControllers.controller('disAssetsController', function ($scope, $modal, disservice) {
     $scope.assets = {};
-    this.connection = app.disConnection;
-    this.view = app.disView;
-    this.searchText = '';
+    $scope.searchText = '';
     $scope.hasAssets = false;
     $scope.currentAsset = {}
     $scope.totalItems = 64;
@@ -99,6 +133,16 @@ uploaderControllers.controller('disAssetsController', function ($scope, $modal, 
     $scope.maxSize = 5;
     $scope.showPager = false;
     $scope.pageSize = 10;
+    $scope.assets = {};
+    $scope.connection = app.disConnection;
+    $scope.view = app.disView;
+    $scope.hasAssets = false;
+    $scope.currentAsset = {}
+    $scope.totalItems = 0;
+    $scope.timedFetchAtcive = (app.recentFileFetchInterval >= 10);
+    $scope.showRefreshButton = app.recentFileRefreshButtonShow;
+    $scope.currentSearchDetails = {};
+    this.timedRefresh;
 
     this.doTextSearch = function doTextSearch() {
         disservice.textSearch($scope.connection, this.view, this.searchText, $scope.currentPage, $scope.pageSize).success(function (response) {
@@ -121,7 +165,34 @@ uploaderControllers.controller('disAssetsController', function ($scope, $modal, 
         $scope.hasAssets = false;
     };
 
-    //this.doTextSearch();
+
+    $scope.getAssetsInCategory = function getRecentAssetsInCategory(categoryId, recursive, direction) {
+        $scope.currentSearchDetails.categoryId = categoryId;
+        $scope.currentSearchDetails.recursive = recursive;
+        $scope.currentSearchDetails.direction = direction;
+        disservice.getRecentAssetsInCategory($scope.connection, $scope.view, categoryId, recursive, direction, 0, app.recentFileFetchCount).success(function (response) {
+            $scope.assets = response;
+            $scope.totalItems = $scope.assets.total;
+            $scope.hasAssets = ($scope.assets.total > 0);
+        }).error(function (response) {
+            doClear();
+        });
+    };
+
+    $scope.refreshAssetsInCategory = function refreshRecentAssetsInCategory() {
+        disservice.getRecentAssetsInCategory($scope.connection, $scope.view, $scope.currentSearchDetails.categoryId, $scope.currentSearchDetails.recursive, $scope.currentSearchDetails.direction, 0, app.recentFileFetchCount).success(function (response) {
+            $scope.assets = response;
+            $scope.totalItems = $scope.assets.total;
+            $scope.hasAssets = ($scope.assets.total > 0);
+        }).error(function (response) {
+            doClear();
+        });
+    };
+
+    var doClear = function doClear() {
+        $scope.assets = {};
+        $scope.hasAssets = false;
+    };
 
 });
 
@@ -143,7 +214,19 @@ uploaderControllers.controller('disRecentAssetsController', function ($translate
         $scope.currentSearchDetails.recursive = recursive;
         $scope.currentSearchDetails.direction = direction;
         disservice.getRecentAssetsInCategory($scope.connection, $scope.view, categoryId, recursive, direction, 0, app.recentFileFetchCount).success(function (response) {
-            $scope.assets = response;
+            var jassets = [];
+            for (var i = 0; i < response.records.length; i++) {
+                var jasset = response.records[i];
+                if (jasset.Latitude && jasset.Longitude) {
+                    jasset.location = {};
+                    jasset.location.latitude = jasset.Latitude;
+                    jasset.location.longitude = jasset.Longitude;
+                }
+                jassets[i] = jasset;
+            }
+            $scope.assets.count = response.count;
+            $scope.assets.total = response.total;
+            $scope.assets.records = jassets;
             $scope.totalItems = $scope.assets.total;
             $scope.hasAssets = ($scope.assets.total > 0);
         }).error(function (response) {
@@ -334,7 +417,7 @@ uploaderControllers.controller('disFileUploadController', function ($translate, 
     // Creates an uploader
     var uploader = $scope.uploader = $fileUploader.create({
         scope: $scope,
-        url: app.baseUrl + '/file/' + app.disConnection + '/upload'
+        url: app.baseUrl + '/file/' + app.disConnection + '/upload?profile=' + app.assetHandlingSet
     });
 
     $scope.$on("updateCurrentCategory", function (event, args) {
